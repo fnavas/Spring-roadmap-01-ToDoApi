@@ -1,14 +1,14 @@
 package com.fnavas.ToDoApp.service;
 
-import com.fnavas.ToDoApp.entity.Task;
+import com.fnavas.ToDoApp.dto.TaskDto;
 
 import java.util.List;
 
 public interface TaskService {
-    public Task findById(Long id);
-    public List<Task> findByStatus(String status);
-    public List<Task> findAll();
-    public Task createTask(Task task);
-    public Task updateTaskById(Long id,Task task);
+    public TaskDto findById(Long id);
+    public List<TaskDto> findByComleted(String status);
+    public List<TaskDto> findAll();
+    public TaskDto createTask(TaskDto taskDto);
+    public TaskDto updateTaskById(Long id,TaskDto taskDto);
     public void deleteTaskById(Long id);
 }
