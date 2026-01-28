@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface TaskService {
     public TaskDto findById(Long id);
-    public List<TaskDto> findByComleted(String status);
+    public List<TaskDto> findByCompleted(Boolean completed);
     public List<TaskDto> findAll();
     public TaskDto createTask(TaskDto taskDto);
     public TaskDto updateTaskById(Long id,TaskDto taskDto);
