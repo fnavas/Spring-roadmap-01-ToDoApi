@@ -3,6 +3,7 @@ package com.fnavas.ToDoApp.api;
 import com.fnavas.ToDoApp.dto.TaskDto;
 import com.fnavas.ToDoApp.entity.Task;
 import com.fnavas.ToDoApp.service.TaskService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -11,7 +12,9 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
+@Slf4j
 @RequestMapping("api/v1")
+
 public class TaskRestController {
 
     private final TaskService taskService;
@@ -22,18 +25,23 @@ public class TaskRestController {
 
     @GetMapping("/tasks")
     public ResponseEntity<List<TaskDto>> getAllTasks() {
+        log.info("[getAllTasks]-Getting all tasks");
         List<TaskDto> taskDtos = taskService.findAll();
         return ResponseEntity.ok(taskDtos);
     }
 
     @GetMapping("/tasks/{id}")
     public ResponseEntity<TaskDto> getTaskById(@PathVariable Long id) {
+        log.info("[getTaskById]-Getting task by id");
+        log.debug("[getTaskById]-Getting task by id {}", id);
         TaskDto taskDto = taskService.findById(id);
         return ResponseEntity.ok(taskDto);
     }
 
     @PostMapping("/tasks")
     public ResponseEntity<TaskDto> createTask(@RequestBody TaskDto taskDto) {
+        log.info("[createTask]-Creating task");
+        log.debug("[createTask]-Creating task {}", taskDto);
         TaskDto createdTask = taskService.createTask(taskDto);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
