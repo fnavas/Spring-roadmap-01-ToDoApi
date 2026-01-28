@@ -1,16 +1,17 @@
 package com.fnavas.ToDoApp.dto;
 
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
+
 
 import java.time.LocalDate;
 
-@Getter
-@Builder
+@Data
 public class TaskDto {
-    private Long id;
-    private String title;
-    private String description;
-    private Boolean completed;
-    private LocalDate created;
+    Long id;
+    String title;
+    String description;
+    Boolean completed;
+    LocalDate created;
+
 }
