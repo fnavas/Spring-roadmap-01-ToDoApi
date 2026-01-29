@@ -2,6 +2,7 @@ package com.fnavas.ToDoApp.service;
 
 import com.fnavas.ToDoApp.dto.TaskDto;
 import com.fnavas.ToDoApp.entity.Task;
+import com.fnavas.ToDoApp.exception.TaskNotFoundException;
 import com.fnavas.ToDoApp.mapper.TaskMapper;
 import com.fnavas.ToDoApp.repository.TaskRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +30,8 @@ public class TaskServiceImpl implements TaskService {
     public TaskDto findById(Long id) {
         log.info("[findById]-Finding task by id");
         log.debug("[findById]-Finding task by id {}", id);
-        Task task = taskRepository.findById(id).orElse(null);
+        Task task = taskRepository.findById(id).orElseThrow(
+                () -> new TaskNotFoundException("Task with id " + id + " not found"));
         return taskMapper.toDto(task);
     }
 
@@ -67,20 +69,20 @@ public class TaskServiceImpl implements TaskService {
     public TaskDto updateTaskById(Long id, TaskDto taskDto) {
         log.info("[updateTaskById]-Updating task by id");
         log.debug("[updateTaskById]-Updating task by id {} with data {}", id, taskDto);
-        Task task = taskRepository.findById(id).orElse(null);
-        if (task != null) {
-            task.setDescription(taskDto.getDescription());
-            task.setCompleted(taskDto.getCompleted());
-            task.setTitle(taskDto.getTitle());
-            return taskMapper.toDto(taskRepository.save(task));
-        }
-        return null;
+        Task task = taskRepository.findById(id).orElseThrow(
+                () -> new TaskNotFoundException("Task with id " + id + " not found"));
+        task.setDescription(taskDto.getDescription());
+        task.setCompleted(taskDto.getCompleted());
+        task.setTitle(taskDto.getTitle());
+        return taskMapper.toDto(taskRepository.save(task));
     }
 
     @Override
     public void deleteTaskById(Long id) {
         log.info("[deleteTaskById]-Deleting task by id");
         log.debug("[deleteTaskById]-Deleting task by id {}", id);
+        taskRepository.findById(id).orElseThrow(
+                () -> new TaskNotFoundException("Task with id " + id + " not found"));
         taskRepository.deleteById(id);
     }
 }
