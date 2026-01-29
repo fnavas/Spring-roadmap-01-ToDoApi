@@ -48,6 +48,22 @@ public class TaskRestController {
                 .path("/tasks/{id}")
                 .buildAndExpand(createdTask.getId())
                 .toUri();
-        return ResponseEntity.created(location).build();
+        return ResponseEntity.created(location).body(createdTask);
+    }
+
+    @PutMapping("/tasks/{id}")
+    public ResponseEntity<TaskDto> updateTask(@PathVariable Long id, @RequestBody TaskDto taskDto) {
+        log.info("[updateTask]-Updating task");
+        log.debug("[updateTask]-Updating task {}", taskDto);
+        TaskDto updatedTaskDto = taskService.updateTaskById(id, taskDto);
+        return ResponseEntity.ok(updatedTaskDto);
+    }
+
+    @DeleteMapping("/tasks/{id}")
+    public ResponseEntity deleteTask(@PathVariable Long id) {
+        log.info("[deleteTask]-Deleting task by id");
+        log.debug("[deleteTask]-Deleting task by id {}", id);
+        taskService.deleteTaskById(id);
+        return ResponseEntity.noContent().build();
     }
 }
