@@ -46,7 +46,7 @@ class TaskServiceImplTest {
     }
 
     @Test
-    public void getTaskById_returnsTask() {
+    void getTaskById_returnsTask() {
         Task mockTask = sampleTask();
         TaskDto mockTaskDto = sampleTaskDto();
         Mockito.when(taskRepository.findById(1L)).thenReturn(Optional.of(mockTask));
@@ -61,7 +61,7 @@ class TaskServiceImplTest {
     }
 
     @Test
-    public void getTaskById_returnsTaskNotFoundException() {
+    void getTaskById_returnsTaskNotFoundException() {
         Long id = 99L;
         Mockito.when(taskRepository.findById(id)).thenReturn(Optional.empty());
 
@@ -74,7 +74,7 @@ class TaskServiceImplTest {
     }
 
     @Test
-    public void findByCompleted_returnsTasks() {
+    void findByCompleted_returnsTasks() {
         Task mockTask = sampleTask();
         TaskDto mockTaskDto = sampleTaskDto();
         List<Task> mockTasks = List.of(sampleTask(), sampleTask());
@@ -90,7 +90,7 @@ class TaskServiceImplTest {
     }
 
     @Test
-    public void findAll_returnsTasks() {
+    void findAll_returnsTasks() {
         List<Task> mockTasks = List.of(sampleTask(), sampleTask());
         Task  mockTask = sampleTask();
         TaskDto mockTaskDto = sampleTaskDto();
@@ -105,7 +105,7 @@ class TaskServiceImplTest {
     }
 
     @Test
-    public void createTask() {
+    void createTask() {
         Task mockTask = sampleTask();
         TaskDto mockTaskDto = sampleTaskDto();
         Mockito.when(taskMapper.toDto(mockTask)).thenReturn(mockTaskDto);
@@ -122,7 +122,7 @@ class TaskServiceImplTest {
     }
 
     @Test
-    public void updateTaskById_whenTaskExits_returnsTask() {
+    void updateTaskById_whenTaskExits_returnsTask() {
         Long id = 1L;
         Task mockTask = sampleTask();
         TaskDto mockTaskDto = sampleTaskDto();
@@ -139,7 +139,7 @@ class TaskServiceImplTest {
     }
 
     @Test
-    public void updateTask_whenTaskDoesNotExits_returnsTaskNotFoundException() {
+    void updateTask_whenTaskDoesNotExits_returnsTaskNotFoundException() {
         Long id = 99L;
         TaskDto mockTaskDto = sampleTaskDto();
         Mockito.when(taskRepository.findById(id)).thenReturn(Optional.empty());
@@ -155,7 +155,7 @@ class TaskServiceImplTest {
     }
 
     @Test
-    public void deleteTaskById_whenTaskExits_shouldDeleteTask() {
+    void deleteTaskById_whenTaskExits_shouldDeleteTask() {
         Long id = 1L;
         Task mockTask = sampleTask();
         Mockito.when(taskRepository.findById(id)).thenReturn(Optional.of(mockTask));
@@ -167,7 +167,7 @@ class TaskServiceImplTest {
     }
 
     @Test
-    public void deleteTask_whenTaskDoesNotExits_shouldDeleteTaskNotFoundException() {
+    void deleteTask_whenTaskDoesNotExits_shouldDeleteTaskNotFoundException() {
         Long id = 99L;
         Mockito.when(taskRepository.findById(id)).thenReturn(Optional.empty());
 

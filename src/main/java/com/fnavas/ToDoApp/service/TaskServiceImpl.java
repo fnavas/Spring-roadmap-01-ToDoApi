@@ -61,8 +61,7 @@ public class TaskServiceImpl implements TaskService {
         log.info("[createTask]-Creating task");
         log.debug("[createTask]-Creating task {}", taskDto);
         Task task = taskMapper.toEntity(taskDto);
-        TaskDto savedTaskDto = taskMapper.toDto(taskRepository.save(task));
-        return savedTaskDto;
+        return taskMapper.toDto(taskRepository.save(task));
     }
 
     @Override
