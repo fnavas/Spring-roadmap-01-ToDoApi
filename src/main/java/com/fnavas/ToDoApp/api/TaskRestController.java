@@ -3,6 +3,7 @@ package com.fnavas.ToDoApp.api;
 import com.fnavas.ToDoApp.dto.TaskDto;
 import com.fnavas.ToDoApp.entity.Task;
 import com.fnavas.ToDoApp.service.TaskService;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -39,7 +40,7 @@ public class TaskRestController {
     }
 
     @PostMapping("/tasks")
-    public ResponseEntity<TaskDto> createTask(@RequestBody TaskDto taskDto) {
+    public ResponseEntity<TaskDto> createTask(@Valid @RequestBody TaskDto taskDto) {
         log.info("[createTask]-Creating task");
         log.debug("[createTask]-Creating task {}", taskDto);
         TaskDto createdTask = taskService.createTask(taskDto);
