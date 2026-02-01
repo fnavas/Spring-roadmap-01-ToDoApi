@@ -53,7 +53,7 @@ public class TaskRestController {
     }
 
     @PutMapping("/tasks/{id}")
-    public ResponseEntity<TaskDto> updateTask(@PathVariable Long id, @RequestBody TaskDto taskDto) {
+    public ResponseEntity<TaskDto> updateTask(@PathVariable Long id, @Valid @RequestBody TaskDto taskDto) {
         log.info("[updateTask]-Updating task");
         log.debug("[updateTask]-Updating task {}", taskDto);
         TaskDto updatedTaskDto = taskService.updateTaskById(id, taskDto);

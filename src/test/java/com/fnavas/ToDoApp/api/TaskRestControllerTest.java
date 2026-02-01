@@ -40,7 +40,7 @@ class TaskRestControllerTest {
     }
 
     @Test
-    void shouldReturnTaskList() throws Exception {
+    void getAllTasks_shouldReturnTaskList() throws Exception {
         List<TaskDto> taskDtos  = List.of(sampleTaskDto(), sampleTaskDto());
         Mockito.when(taskService.findAll()).thenReturn(taskDtos);
 
@@ -56,7 +56,7 @@ class TaskRestControllerTest {
     }
 
     @Test
-    void shouldReturnTaskById() throws Exception {
+    void getTaskByID_shouldReturnTaskById() throws Exception {
         Long id = 1L;
         TaskDto taskDto = sampleTaskDto();
         Mockito.when(taskService.findById(id)).thenReturn(taskDto);
@@ -72,7 +72,7 @@ class TaskRestControllerTest {
     }
 
     @Test
-    void shouldCreateTask() throws Exception {
+    void createTask_shouldCreateTask() throws Exception {
         TaskDto request = sampleTaskDto();
         request.setId(null);
         TaskDto response = new TaskDto();
@@ -87,7 +87,20 @@ class TaskRestControllerTest {
     }
 
     @Test
-    void shouldUpdateTask() throws Exception {
+    void createTask_withInvalidData_shouldReturnBadRequest() throws Exception {
+        TaskDto request = new TaskDto();
+        request.setDescription("description");
+
+        mockMvc.perform(post("/api/v1/tasks")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest());
+
+        Mockito.verify(taskService, Mockito.never()).createTask(any(TaskDto.class));
+    }
+
+    @Test
+    void updateTask_shouldUpdateTask() throws Exception {
         Long id = 1L;
         TaskDto request = sampleTaskDto();
         request.setId(null);
@@ -105,7 +118,21 @@ class TaskRestControllerTest {
     }
 
     @Test
-    void shouldDeleteTask() throws Exception {
+    void updateTask_withInvalidData_shouldReturnBadRequest() throws Exception {
+        Long id = 1L;
+        TaskDto request = new TaskDto();
+        request.setDescription("description");
+
+        mockMvc.perform(put("/api/v1/tasks/{id}", id)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest());
+
+        Mockito.verify(taskService, Mockito.never()).updateTaskById(eq(id), any(TaskDto.class));
+    }
+
+    @Test
+    void deleteTask_shouldDeleteTask() throws Exception {
         Long id = 1L;
         Mockito.doNothing().when(taskService).deleteTaskById(eq(id));
 
