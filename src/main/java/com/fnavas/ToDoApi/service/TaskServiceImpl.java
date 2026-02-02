@@ -1,16 +1,13 @@
-package com.fnavas.ToDoApp.service;
+package com.fnavas.ToDoApi.service;
 
-import com.fnavas.ToDoApp.dto.TaskDto;
-import com.fnavas.ToDoApp.entity.Task;
-import com.fnavas.ToDoApp.exception.TaskNotFoundException;
-import com.fnavas.ToDoApp.mapper.TaskMapper;
-import com.fnavas.ToDoApp.repository.TaskRepository;
+import com.fnavas.ToDoApi.dto.TaskDto;
+import com.fnavas.ToDoApi.entity.Task;
+import com.fnavas.ToDoApi.exception.TaskNotFoundException;
+import com.fnavas.ToDoApi.mapper.TaskMapper;
+import com.fnavas.ToDoApi.repository.TaskRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service

@@ -1,7 +1,7 @@
-package com.fnavas.ToDoApp.api;
+package com.fnavas.ToDoApi.api;
 
-import com.fnavas.ToDoApp.dto.TaskDto;
-import com.fnavas.ToDoApp.service.TaskService;
+import com.fnavas.ToDoApi.dto.TaskDto;
+import com.fnavas.ToDoApi.service.TaskService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;

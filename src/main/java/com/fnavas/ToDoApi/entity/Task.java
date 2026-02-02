@@ -1,4 +1,4 @@
-package com.fnavas.ToDoApp.entity;
+package com.fnavas.ToDoApi.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;

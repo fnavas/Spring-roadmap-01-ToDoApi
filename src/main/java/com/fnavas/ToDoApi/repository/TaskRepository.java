@@ -1,7 +1,6 @@
-package com.fnavas.ToDoApp.repository;
+package com.fnavas.ToDoApi.repository;
 
-import com.fnavas.ToDoApp.dto.TaskDto;
-import com.fnavas.ToDoApp.entity.Task;
+import com.fnavas.ToDoApi.entity.Task;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

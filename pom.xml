@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.fnavas</groupId>
-	<artifactId>ToDoApp</artifactId>
+	<artifactId>ToDoApi</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>ToDoApp</name>
-	<description>ToDo App with Spring Boot</description>
+	<name>ToDoApi</name>
+	<description>ToDo Api with Spring Boot</description>
 	<url/>
 	<licenses>
 		<license/>

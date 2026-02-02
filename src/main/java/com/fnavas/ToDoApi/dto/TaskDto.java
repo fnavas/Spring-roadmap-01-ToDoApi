@@ -1,4 +1,4 @@
-package com.fnavas.ToDoApp.dto;
+package com.fnavas.ToDoApi.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;

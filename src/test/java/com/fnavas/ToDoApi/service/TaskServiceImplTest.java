@@ -1,17 +1,16 @@
-package com.fnavas.ToDoApp.service;
+package com.fnavas.ToDoApi.service;
 
-import com.fnavas.ToDoApp.dto.TaskDto;
-import com.fnavas.ToDoApp.entity.Task;
-import com.fnavas.ToDoApp.exception.TaskNotFoundException;
-import com.fnavas.ToDoApp.mapper.TaskMapper;
-import com.fnavas.ToDoApp.repository.TaskRepository;
+import com.fnavas.ToDoApi.dto.TaskDto;
+import com.fnavas.ToDoApi.entity.Task;
+import com.fnavas.ToDoApi.exception.TaskNotFoundException;
+import com.fnavas.ToDoApi.mapper.TaskMapper;
+import com.fnavas.ToDoApi.repository.TaskRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
 import java.util.Optional;

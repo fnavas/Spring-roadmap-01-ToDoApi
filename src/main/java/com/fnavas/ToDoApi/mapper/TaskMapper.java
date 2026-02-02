@@ -1,7 +1,7 @@
-package com.fnavas.ToDoApp.mapper;
+package com.fnavas.ToDoApi.mapper;
 
-import com.fnavas.ToDoApp.dto.TaskDto;
-import com.fnavas.ToDoApp.entity.Task;
+import com.fnavas.ToDoApi.dto.TaskDto;
+import com.fnavas.ToDoApi.entity.Task;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

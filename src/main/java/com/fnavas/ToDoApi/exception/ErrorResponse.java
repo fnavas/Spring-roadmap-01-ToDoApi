@@ -1,4 +1,4 @@
-package com.fnavas.ToDoApp.exception;
+package com.fnavas.ToDoApi.exception;
 
 import lombok.Getter;
 import lombok.Setter;

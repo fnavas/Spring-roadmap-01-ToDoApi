@@ -1,6 +1,6 @@
-package com.fnavas.ToDoApp.service;
+package com.fnavas.ToDoApi.service;
 
-import com.fnavas.ToDoApp.dto.TaskDto;
+import com.fnavas.ToDoApi.dto.TaskDto;
 
 import java.util.List;
 

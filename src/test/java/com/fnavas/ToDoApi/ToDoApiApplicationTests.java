@@ -1,10 +1,10 @@
-package com.fnavas.ToDoApp;
+package com.fnavas.ToDoApi;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class ToDoAppApplicationTests {
+class ToDoApiApplicationTests {
 
 	@Test
 	void contextLoads() {

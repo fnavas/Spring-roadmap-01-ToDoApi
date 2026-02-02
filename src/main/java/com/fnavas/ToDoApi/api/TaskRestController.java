@@ -1,8 +1,7 @@
-package com.fnavas.ToDoApp.api;
+package com.fnavas.ToDoApi.api;
 
-import com.fnavas.ToDoApp.dto.TaskDto;
-import com.fnavas.ToDoApp.entity.Task;
-import com.fnavas.ToDoApp.service.TaskService;
+import com.fnavas.ToDoApi.dto.TaskDto;
+import com.fnavas.ToDoApi.service.TaskService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

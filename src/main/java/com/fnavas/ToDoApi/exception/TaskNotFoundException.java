@@ -1,4 +1,4 @@
-package com.fnavas.ToDoApp.exception;
+package com.fnavas.ToDoApi.exception;
 
 public class TaskNotFoundException extends RuntimeException {
     public TaskNotFoundException(String message) {
