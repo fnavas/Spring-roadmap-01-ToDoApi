@@ -2,6 +2,7 @@ package com.fnavas.ToDoApi.api;
 
 import com.fnavas.ToDoApi.dto.TaskDto;
 import com.fnavas.ToDoApi.service.TaskService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -14,8 +15,8 @@ import java.util.List;
 @RestController
 @Slf4j
 @RequestMapping("api/v1")
-
-public class TaskRestController {
+@Tag(name = "Task Management", description = "APIs for managing tasks")
+public class TaskRestController implements ApiTaskController {
 
     private final TaskService taskService;
 
@@ -23,6 +24,7 @@ public class TaskRestController {
         this.taskService = taskService;
     }
 
+    @Override
     @GetMapping("/tasks")
     public ResponseEntity<List<TaskDto>> getAllTasks() {
         log.info("[getAllTasks]-Getting all tasks");
@@ -30,6 +32,7 @@ public class TaskRestController {
         return ResponseEntity.ok(taskDtos);
     }
 
+    @Override
     @GetMapping("/tasks/{id}")
     public ResponseEntity<TaskDto> getTaskById(@PathVariable Long id) {
         log.info("[getTaskById]-Getting task by id");
@@ -38,6 +41,7 @@ public class TaskRestController {
         return ResponseEntity.ok(taskDto);
     }
 
+    @Override
     @PostMapping("/tasks")
     public ResponseEntity<TaskDto> createTask(@Valid @RequestBody TaskDto taskDto) {
         log.info("[createTask]-Creating task");
@@ -51,6 +55,7 @@ public class TaskRestController {
         return ResponseEntity.created(location).body(createdTask);
     }
 
+    @Override
     @PutMapping("/tasks/{id}")
     public ResponseEntity<TaskDto> updateTask(@PathVariable Long id, @Valid @RequestBody TaskDto taskDto) {
         log.info("[updateTask]-Updating task");
@@ -59,6 +64,7 @@ public class TaskRestController {
         return ResponseEntity.ok(updatedTaskDto);
     }
 
+    @Override
     @DeleteMapping("/tasks/{id}")
     public ResponseEntity deleteTask(@PathVariable Long id) {
         log.info("[deleteTask]-Deleting task by id");
