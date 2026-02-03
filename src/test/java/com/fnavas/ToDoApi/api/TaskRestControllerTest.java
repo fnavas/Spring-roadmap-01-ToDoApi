@@ -32,8 +32,7 @@ class TaskRestControllerTest {
 
 
     private TaskDto sampleTaskDto() {
-        TaskDto sampleTaskDto = new TaskDto(1L, "title", "description", null, null);
-        return sampleTaskDto;
+        return new TaskDto(1L, "title", "description", null, null);
     }
 
     @Test
@@ -70,7 +69,7 @@ class TaskRestControllerTest {
 
     @Test
     void createTask_shouldCreateTask() throws Exception {
-        TaskDto request = new TaskDto(1L, "title", "description", null, null);
+        TaskDto request = sampleTaskDto();
         TaskDto response = new TaskDto(null, null, null, null, null);
         Mockito.when(taskService.createTask(any(TaskDto.class))).thenReturn(response);
 
