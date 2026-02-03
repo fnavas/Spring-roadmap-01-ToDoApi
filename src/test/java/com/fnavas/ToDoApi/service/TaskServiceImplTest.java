@@ -37,10 +37,7 @@ class TaskServiceImplTest {
     }
 
     private TaskDto sampleTaskDto() {
-        TaskDto sampleTaskDto = new TaskDto();
-        sampleTaskDto.setId(1L);
-        sampleTaskDto.setTitle("title");
-        sampleTaskDto.setDescription("description");
+        TaskDto sampleTaskDto = new TaskDto(1L, "title", "description", null, null);
         return sampleTaskDto;
     }
 
@@ -54,8 +51,8 @@ class TaskServiceImplTest {
         TaskDto taskDto = taskServiceImpl.findById(1L);
 
         assertNotNull(taskDto);
-        assertEquals(taskDto.getTitle(), mockTask.getTitle());
-        assertEquals(taskDto.getDescription(), mockTask.getDescription());
+        assertEquals(taskDto.title(), mockTask.getTitle());
+        assertEquals(taskDto.description(), mockTask.getDescription());
         Mockito.verify(taskRepository, Mockito.times(1)).findById(1L);
     }
 
@@ -114,8 +111,8 @@ class TaskServiceImplTest {
         TaskDto taskDto = taskServiceImpl.createTask(mockTaskDto);
 
         assertNotNull(taskDto);
-        assertEquals(taskDto.getTitle(), mockTask.getTitle());
-        assertEquals(taskDto.getDescription(), mockTask.getDescription());
+        assertEquals(taskDto.title(), mockTask.getTitle());
+        assertEquals(taskDto.description(), mockTask.getDescription());
         Mockito.verify(taskRepository, Mockito.times(1)).save(mockTask);
 
     }
@@ -132,8 +129,8 @@ class TaskServiceImplTest {
         TaskDto taskDto = taskServiceImpl.updateTaskById(id, mockTaskDto);
 
         assertNotNull(taskDto);
-        assertEquals(taskDto.getTitle(), mockTask.getTitle());
-        assertEquals(taskDto.getDescription(), mockTask.getDescription());
+        assertEquals(taskDto.title(), mockTask.getTitle());
+        assertEquals(taskDto.description(), mockTask.getDescription());
         Mockito.verify(taskRepository, Mockito.times(1)).save(mockTask);
     }
 

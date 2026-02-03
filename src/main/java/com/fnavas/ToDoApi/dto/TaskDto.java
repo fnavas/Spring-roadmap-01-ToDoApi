@@ -6,13 +6,12 @@ import lombok.Data;
 
 import java.time.LocalDate;
 
-@Data
-public class TaskDto {
-    Long id;
-    @NotBlank(message = "Title is mandatory")
-    String title;
-    String description;
-    Boolean completed;
-    LocalDate created;
 
-}
+public record TaskDto (
+        Long id,
+        @NotBlank(message = "Title is mandatory")
+        String title,
+        String description,
+        Boolean completed,
+        LocalDate created
+){ }

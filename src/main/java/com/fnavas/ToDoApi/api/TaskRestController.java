@@ -50,7 +50,7 @@ public class TaskRestController implements ApiTaskController {
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/tasks/{id}")
-                .buildAndExpand(createdTask.getId())
+                .buildAndExpand(createdTask.id())
                 .toUri();
         return ResponseEntity.created(location).body(createdTask);
     }
