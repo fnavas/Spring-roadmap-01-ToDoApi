@@ -19,6 +19,8 @@ This is the first project of my **Spring Boot Mastery Roadmap**. It is a profess
 * **Spring Boot 4.x**
 * **Spring Data JPA**
 * **H2 Database** (In-memory for easy testing)
+* **Jakarta Validation**
+* **MapStruct 1.6.x** (for DTO mapping)
 * **Lombok**
 * **SpringDoc OpenAPI (Swagger)**
 

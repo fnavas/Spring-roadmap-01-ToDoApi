@@ -47,6 +47,16 @@ public interface ApiTaskController {
     public ResponseEntity<TaskDto> createTask(TaskDto taskDto);
 
     @Operation(summary = "Update Task", description = "Update an existing task by its ID")
+    @RequestBody(
+            content = @Content(
+                    mediaType = "application/json",
+                    examples = @ExampleObject(
+                            value = "{\"title\":\"Example title\"" +
+                                    ",\"description\":\"Example description\"" +
+                                    ",\"completed\":true}"
+                    )
+            )
+    )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully updated the task"),
             @ApiResponse(
