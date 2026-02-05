@@ -41,7 +41,7 @@ This project follows a **Layered Architecture**:
 ### Installation & Run
 1. Clone the repository:
    ```bash
-   git clone [https://github.com/](https://github.com/)[TU_USUARIO]/spring-roadmap-01-todoapi.git
+   git clone https://github.com/fnavas/spring-roadmap-01-todoapi.git
 2. Navigate to the folrder:
    ```bash
    cd spring-roadmap-01-todoapi
