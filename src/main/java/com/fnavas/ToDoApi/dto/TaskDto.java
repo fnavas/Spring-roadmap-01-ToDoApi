@@ -1,18 +1,17 @@
 package com.fnavas.ToDoApi.dto;
 
 import jakarta.validation.constraints.NotBlank;
-import lombok.Data;
-
+import jakarta.validation.constraints.Size;
 
 import java.time.LocalDate;
 
-@Data
-public class TaskDto {
-    Long id;
-    @NotBlank(message = "Title is mandatory")
-    String title;
-    String description;
-    Boolean completed;
-    LocalDate created;
 
-}
+public record TaskDto (
+        Long id,
+        @NotBlank(message = "Title is mandatory")
+        String title,
+        @Size(max = 255, message = "The description is too long. Max 255 characters")
+        String description,
+        Boolean completed,
+        LocalDate created
+){ }

@@ -67,9 +67,9 @@ public class TaskServiceImpl implements TaskService {
         log.debug("[updateTaskById]-Updating task by id {} with data {}", id, taskDto);
         Task task = taskRepository.findById(id).orElseThrow(
                 () -> new TaskNotFoundException("Task with id " + id + " not found"));
-        task.setDescription(taskDto.getDescription());
-        task.setCompleted(taskDto.getCompleted());
-        task.setTitle(taskDto.getTitle());
+        task.setDescription(taskDto.description());
+        task.setCompleted(taskDto.completed());
+        task.setTitle(taskDto.title());
         return taskMapper.toDto(taskRepository.save(task));
     }
 

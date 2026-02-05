@@ -22,6 +22,7 @@ This is the first project of my **Spring Boot Mastery Roadmap**. It is a profess
 * **Jakarta Validation**
 * **MapStruct 1.6.x** (for DTO mapping)
 * **Lombok**
+* **JUnit 5 & Mockito (Unit testing with 80%+ coverage)**
 * **SpringDoc OpenAPI (Swagger)**
 
 ## 🏗️ Architecture
