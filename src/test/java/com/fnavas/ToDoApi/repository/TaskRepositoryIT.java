@@ -6,7 +6,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 import org.springframework.boot.jpa.test.autoconfigure.TestEntityManager;
+import org.springframework.dao.DataIntegrityViolationException;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -79,5 +82,28 @@ class TaskRepositoryIT {
         List<Task> results = taskRepository.findByDescriptionContainingIgnoreCase("NonExisting");
 
         assertTrue(results.isEmpty());
+    }
+
+    @Test
+    void createTask_withTitleNull_shouldThrowsException() {
+        Task task = new Task();
+        task.setDescription("Task without title");
+        task.setCompleted(false);
+
+        assertThrows(DataIntegrityViolationException.class, () -> {taskRepository.save(task);});
+    }
+
+    @Test
+    void updateTask_withCreatedDate_shouldNotChange() {
+        Task task = taskRepository.findByTitleContainingIgnoreCase("Task One").get(0);
+        LocalDate originalDate = task.getCreated();
+        Long id = task.getId();
+        task.setCreated(originalDate.plusDays(1));
+        taskRepository.saveAndFlush(task);
+        testEntityManager.clear();
+
+        Task taskFromDB = taskRepository.findById(id).orElseThrow();
+
+        assertEquals(originalDate, taskFromDB.getCreated());
     }
 }

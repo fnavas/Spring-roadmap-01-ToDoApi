@@ -3,12 +3,15 @@ package com.fnavas.ToDoApi.api;
 import com.fnavas.ToDoApi.dto.TaskDto;
 import com.fnavas.ToDoApi.entity.Task;
 import com.fnavas.ToDoApi.repository.TaskRepository;
+import com.fnavas.ToDoApi.service.TaskService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import tools.jackson.databind.ObjectMapper;
 
