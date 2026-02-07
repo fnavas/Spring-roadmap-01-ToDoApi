@@ -2,7 +2,6 @@ package com.fnavas.ToDoApi.repository;
 
 import com.fnavas.ToDoApi.entity.Task;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
@@ -13,7 +12,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
-class TaskRepositoryTest {
+class TaskRepositoryIT {
 
     @Autowired
     private TaskRepository taskRepository;
@@ -41,8 +40,7 @@ class TaskRepositoryTest {
     }
 
     @Test
-    @DisplayName("Should find tasks by completed status")
-    void findByCompleted() {
+    void findByCompleted_shouldReturnsCompletedTasks() {
         List<Task> tasksCompleted = taskRepository.findByCompleted(true);
         List<Task> tasksNotCompleted = taskRepository.findByCompleted(false);
 
@@ -54,7 +52,7 @@ class TaskRepositoryTest {
     }
 
     @Test
-    void findByTitleContainingIgnoreCase() {
+    void findByTitleContainingIgnoreCase_shouldReturnsTasksWithTitleContaining() {
         List<Task> results = taskRepository.findByTitleContainingIgnoreCase("one");
 
         assertEquals(1, results.size());
@@ -69,7 +67,7 @@ class TaskRepositoryTest {
     }
 
     @Test
-    void findByDescriptionContainingIgnoreCase() {
+    void findByDescriptionContainingIgnoreCase_shouldReturnsTaskWithDescriptionContaining() {
         List<Task> results = taskRepository.findByDescriptionContainingIgnoreCase("spring");
 
         assertEquals(1, results.size());
