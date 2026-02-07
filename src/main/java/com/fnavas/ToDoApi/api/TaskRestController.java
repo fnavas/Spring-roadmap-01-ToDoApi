@@ -42,6 +42,40 @@ public class TaskRestController implements ApiTaskController {
     }
 
     @Override
+    @GetMapping("/tasks/completed")
+    public ResponseEntity<List<TaskDto>> getCompletedTasks() {
+        log.info("[getCompletedTasks]-Getting completed tasks");
+        List<TaskDto> completedTasks = taskService.findByCompleted(true);
+        return ResponseEntity.ok(completedTasks);
+    }
+
+    @Override
+    @GetMapping("/tasks/pending")
+    public ResponseEntity<List<TaskDto>> getPendingTasks() {
+        log.info("[getPendingTasks]-Getting pending tasks");
+        List<TaskDto> pendingTasks = taskService.findByCompleted(false);
+        return ResponseEntity.ok(pendingTasks);
+    }
+
+    @Override
+    @GetMapping("/tasks/search-by-title/{title}")
+    public ResponseEntity<List<TaskDto>> getTasksByTitle(@PathVariable String title) {
+        log.info("[getTasksByTitle]-Getting tasks by title");
+        log.debug("[getTasksByTitle]-Getting tasks by title {}", title);
+        List<TaskDto> taskDtos = taskService.findByTitleContainingIgnoreCase(title);
+        return ResponseEntity.ok(taskDtos);
+    }
+
+    @Override
+    @GetMapping("/tasks/search-by-description/{description}")
+    public ResponseEntity<List<TaskDto>> getTasksByDescription(@PathVariable String description) {
+        log.info("[getTasksByDescription]-Getting tasks by description");
+        log.debug("[getTasksByDescription]-Getting tasks by description {}", description);
+        List<TaskDto> taskDtos = taskService.findByDescriptionContainingIgnoreCase(description);
+        return ResponseEntity.ok(taskDtos);
+    }
+
+    @Override
     @PostMapping("/tasks")
     public ResponseEntity<TaskDto> createTask(@Valid @RequestBody TaskDto taskDto) {
         log.info("[createTask]-Creating task");

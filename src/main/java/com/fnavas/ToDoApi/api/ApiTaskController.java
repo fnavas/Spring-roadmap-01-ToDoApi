@@ -31,6 +31,30 @@ public interface ApiTaskController {
     })
     public ResponseEntity<TaskDto> getTaskById(Long id);
 
+    @Operation(summary = "Get Completed Tasks", description = "Retrieve a list of completed tasks")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved list of completed tasks"),
+    })
+    public ResponseEntity<List<TaskDto>> getCompletedTasks();
+
+
+    @Operation(summary = "Get Pending Tasks", description = "Retrieve a list of pending tasks")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved list of pending tasks"),
+    })
+    public ResponseEntity<List<TaskDto>> getPendingTasks();
+
+    @Operation(summary = "Get Tasks by Title", description = "Retrieve a list of tasks that match the given title")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved list of tasks matching the title"),
+    })
+    public ResponseEntity<List<TaskDto>> getTasksByTitle(String title);
+
+    @Operation(summary = "Get Tasks by Description", description = "Retrieve a list of tasks that match the given description")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved list of tasks matching the description"),
+    })
+    public ResponseEntity<List<TaskDto>> getTasksByDescription(String description);
 
     @Operation(summary = "Create Task", description = "Create a new task")
     @RequestBody(
