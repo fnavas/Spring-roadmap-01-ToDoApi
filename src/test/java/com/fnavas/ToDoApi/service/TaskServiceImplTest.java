@@ -100,6 +100,38 @@ class TaskServiceImplTest {
     }
 
     @Test
+    void findByTitleContainingIgnoreCase_returnsTasks() {
+        String title = "title";
+        List<Task> mockTasks = List.of(sampleTask(), sampleTask());
+        Task  mockTask = sampleTask();
+        TaskDto mockTaskDto = sampleTaskDto();
+        Mockito.when(taskRepository.findByTitleContainingIgnoreCase(title)).thenReturn(mockTasks);
+        Mockito.when(taskMapper.toDto(mockTask)).thenReturn(mockTaskDto);
+
+        List<TaskDto> taskDtos = taskServiceImpl.findByTitleContainingIgnoreCase(title);
+
+        assertNotNull(taskDtos);
+        assertEquals(taskDtos.size(), mockTasks.size());
+        Mockito.verify(taskRepository, Mockito.times(1)).findByTitleContainingIgnoreCase(title);
+    }
+
+    @Test
+    void findByDescriptionContainingIgnoreCase_returnsTasks() {
+        String description = "description";
+        List<Task> mockTasks = List.of(sampleTask(), sampleTask());
+        Task  mockTask = sampleTask();
+        TaskDto mockTaskDto = sampleTaskDto();
+        Mockito.when(taskRepository.findByDescriptionContainingIgnoreCase(description)).thenReturn(mockTasks);
+        Mockito.when(taskMapper.toDto(mockTask)).thenReturn(mockTaskDto);
+
+        List<TaskDto> taskDtos = taskServiceImpl.findByDescriptionContainingIgnoreCase(description);
+
+        assertNotNull(taskDtos);
+        assertEquals(taskDtos.size(), mockTasks.size());
+        Mockito.verify(taskRepository, Mockito.times(1)).findByDescriptionContainingIgnoreCase(description);
+    }
+
+    @Test
     void createTask() {
         Task mockTask = sampleTask();
         TaskDto mockTaskDto = sampleTaskDto();
