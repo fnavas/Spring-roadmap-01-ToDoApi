@@ -54,6 +54,28 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    public List<TaskDto> findByTitleContainingIgnoreCase(String title) {
+        log.info("[findByTitleContainingIgnoreCase]-Finding tasks by title containing ignore case");
+        log.debug("[findByTitleContainingIgnoreCase]-Finding tasks by title containing ignore case {}", title);
+        List<Task> tasks = taskRepository.findByTitleContainingIgnoreCase(title);
+        List<TaskDto> taskDtos = tasks.stream()
+                .map(taskMapper::toDto)
+                .toList();
+        return taskDtos;
+    }
+
+    @Override
+    public List<TaskDto> findByDescriptionContainingIgnoreCase(String description) {
+        log.info("[findByDescriptionContainingIgnoreCase]-Finding tasks by description containing ignore case");
+        log.debug("[findByDescriptionContainingIgnoreCase]-Finding tasks by description containing ignore case {}", description);
+        List<Task> tasks = taskRepository.findByDescriptionContainingIgnoreCase(description);
+        List<TaskDto> taskDtos = tasks.stream()
+                .map(taskMapper::toDto)
+                .toList();
+        return taskDtos;
+    }
+
+    @Override
     public TaskDto createTask(TaskDto taskDto) {
         log.info("[createTask]-Creating task");
         log.debug("[createTask]-Creating task {}", taskDto);
