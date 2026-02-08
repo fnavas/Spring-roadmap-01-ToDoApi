@@ -18,7 +18,7 @@ public interface ApiTaskController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved list of tasks"),
     })
-    public ResponseEntity<List<TaskDto>> getAllTasks();
+    ResponseEntity<List<TaskDto>> getAllTasks();
 
     @Operation(summary = "Get Task by ID", description = "Retrieve a task by its ID")
     @ApiResponses(value = {
@@ -29,32 +29,32 @@ public interface ApiTaskController {
                     content = @Content(schema = @Schema(implementation = ErrorResponse.class))
             )
     })
-    public ResponseEntity<TaskDto> getTaskById(Long id);
+    ResponseEntity<TaskDto> getTaskById(Long id);
 
     @Operation(summary = "Get Completed Tasks", description = "Retrieve a list of completed tasks")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved list of completed tasks"),
     })
-    public ResponseEntity<List<TaskDto>> getCompletedTasks();
+    ResponseEntity<List<TaskDto>> getCompletedTasks();
 
 
     @Operation(summary = "Get Pending Tasks", description = "Retrieve a list of pending tasks")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved list of pending tasks"),
     })
-    public ResponseEntity<List<TaskDto>> getPendingTasks();
+    ResponseEntity<List<TaskDto>> getPendingTasks();
 
     @Operation(summary = "Get Tasks by Title", description = "Retrieve a list of tasks that match the given title")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved list of tasks matching the title"),
     })
-    public ResponseEntity<List<TaskDto>> getTasksByTitle(String title);
+    ResponseEntity<List<TaskDto>> getTasksByTitle(String title);
 
     @Operation(summary = "Get Tasks by Description", description = "Retrieve a list of tasks that match the given description")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved list of tasks matching the description"),
     })
-    public ResponseEntity<List<TaskDto>> getTasksByDescription(String description);
+    ResponseEntity<List<TaskDto>> getTasksByDescription(String description);
 
     @Operation(summary = "Create Task", description = "Create a new task")
     @RequestBody(
@@ -68,7 +68,7 @@ public interface ApiTaskController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Successfully created the task")
     })
-    public ResponseEntity<TaskDto> createTask(TaskDto taskDto);
+    ResponseEntity<TaskDto> createTask(TaskDto taskDto);
 
     @Operation(summary = "Update Task", description = "Update an existing task by its ID")
     @RequestBody(
@@ -89,7 +89,7 @@ public interface ApiTaskController {
                     content = @Content(schema = @Schema(implementation = ErrorResponse.class))
             )
     })
-    public ResponseEntity<TaskDto> updateTask(Long id, TaskDto taskDto);
+    ResponseEntity<TaskDto> updateTask(Long id, TaskDto taskDto);
 
     @Operation(summary = "Delete Task", description = "Delete a task by its ID")
     @ApiResponses(value = {
@@ -100,5 +100,5 @@ public interface ApiTaskController {
                     content = @Content(schema = @Schema(implementation = ErrorResponse.class))
             )
     })
-    public ResponseEntity deleteTask(Long id);
+    ResponseEntity deleteTask(Long id);
 }

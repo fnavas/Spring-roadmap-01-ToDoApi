@@ -4,6 +4,7 @@ import com.fnavas.ToDoApi.dto.TaskDto;
 import com.fnavas.ToDoApi.service.TaskService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,15 +15,12 @@ import java.util.List;
 
 @RestController
 @Slf4j
+@RequiredArgsConstructor
 @RequestMapping("api/v1")
 @Tag(name = "Task Management", description = "APIs for managing tasks")
 public class TaskRestController implements ApiTaskController {
 
     private final TaskService taskService;
-
-    public TaskRestController(TaskService taskService) {
-        this.taskService = taskService;
-    }
 
     @Override
     @GetMapping("/tasks")

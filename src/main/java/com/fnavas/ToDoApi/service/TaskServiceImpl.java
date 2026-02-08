@@ -5,6 +5,7 @@ import com.fnavas.ToDoApi.entity.Task;
 import com.fnavas.ToDoApi.exception.TaskNotFoundException;
 import com.fnavas.ToDoApi.mapper.TaskMapper;
 import com.fnavas.ToDoApi.repository.TaskRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -12,16 +13,11 @@ import java.util.List;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class TaskServiceImpl implements TaskService {
 
     private final TaskRepository taskRepository;
     private final TaskMapper taskMapper;
-
-
-    public TaskServiceImpl(TaskRepository taskRepository, TaskMapper taskMapper) {
-        this.taskRepository = taskRepository;
-        this.taskMapper = taskMapper;
-    }
 
     @Override
     public TaskDto findById(Long id) {
@@ -37,20 +33,18 @@ public class TaskServiceImpl implements TaskService {
         log.info("[findByCompleted]-Finding tasks by completed");
         log.debug("[findByCompleted]-Finding tasks by completed {}", completed);
         List<Task> tasks = taskRepository.findByCompleted(completed);
-        List<TaskDto> taskDtos = tasks.stream()
+        return tasks.stream()
                 .map(taskMapper::toDto)
                 .toList();
-        return taskDtos;
     }
 
     @Override
     public List<TaskDto> findAll() {
         log.info("[findAll]-Finding all tasks");
         List<Task> tasks = taskRepository.findAll();
-        List<TaskDto> taskDtos = tasks.stream()
+        return tasks.stream()
                 .map(taskMapper::toDto)
                 .toList();
-        return taskDtos;
     }
 
     @Override
@@ -58,10 +52,9 @@ public class TaskServiceImpl implements TaskService {
         log.info("[findByTitleContainingIgnoreCase]-Finding tasks by title containing ignore case");
         log.debug("[findByTitleContainingIgnoreCase]-Finding tasks by title containing ignore case {}", title);
         List<Task> tasks = taskRepository.findByTitleContainingIgnoreCase(title);
-        List<TaskDto> taskDtos = tasks.stream()
+        return tasks.stream()
                 .map(taskMapper::toDto)
                 .toList();
-        return taskDtos;
     }
 
     @Override
@@ -69,10 +62,9 @@ public class TaskServiceImpl implements TaskService {
         log.info("[findByDescriptionContainingIgnoreCase]-Finding tasks by description containing ignore case");
         log.debug("[findByDescriptionContainingIgnoreCase]-Finding tasks by description containing ignore case {}", description);
         List<Task> tasks = taskRepository.findByDescriptionContainingIgnoreCase(description);
-        List<TaskDto> taskDtos = tasks.stream()
+        return tasks.stream()
                 .map(taskMapper::toDto)
                 .toList();
-        return taskDtos;
     }
 
     @Override
