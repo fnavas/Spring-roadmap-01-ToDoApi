@@ -13,7 +13,7 @@ public class OpenApiConfig {
         return new OpenAPI()
                 .info(new Info()
                 .title("ToDo API")
-                .version("1.0")
+                .version("1.1")
                 .description("API for managing ToDo items")
                 .contact(new Contact()
                     .name("Fernando Navas")

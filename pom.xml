@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.fnavas</groupId>
 	<artifactId>ToDoApi</artifactId>
-	<version>0.0.1</version>
+	<version>1.1.0</version>
 	<name>ToDoApi</name>
 	<description>ToDo Api with Spring Boot</description>
 	<url/>
