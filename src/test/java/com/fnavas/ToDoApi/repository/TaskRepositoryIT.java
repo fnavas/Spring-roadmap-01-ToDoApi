@@ -9,7 +9,6 @@ import org.springframework.boot.jpa.test.autoconfigure.TestEntityManager;
 import org.springframework.dao.DataIntegrityViolationException;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;

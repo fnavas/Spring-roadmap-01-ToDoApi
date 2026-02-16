@@ -77,22 +77,26 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public TaskDto updateTaskById(Long id, TaskDto taskDto) {
-        log.info("[updateTaskById]-Updating task by id");
-        log.debug("[updateTaskById]-Updating task by id {} with data {}", id, taskDto);
+        log.info("[updateTaskById]-Finding task by id");
+        log.debug("[updateTaskById]-Finding task by id {}", id);
         Task task = taskRepository.findById(id).orElseThrow(
                 () -> new TaskNotFoundException("Task with id " + id + " not found"));
         task.setDescription(taskDto.description());
         task.setCompleted(taskDto.completed());
         task.setTitle(taskDto.title());
+        log.info("[updateTaskById]-Updating task by id");
+        log.debug("[updateTaskById]-Updating task by id {}", id);
         return taskMapper.toDto(taskRepository.save(task));
     }
 
     @Override
     public void deleteTaskById(Long id) {
-        log.info("[deleteTaskById]-Deleting task by id");
-        log.debug("[deleteTaskById]-Deleting task by id {}", id);
+        log.info("[deleteTaskById]-Finding task by id");
+        log.debug("[deleteTaskById]-Finding task by id {}", id);
         taskRepository.findById(id).orElseThrow(
                 () -> new TaskNotFoundException("Task with id " + id + " not found"));
+        log.info("[deleteTaskById]-Deleting task by id");
+        log.debug("[deleteTaskById]-Deleting task by id {}", id);
         taskRepository.deleteById(id);
     }
 }

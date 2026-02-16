@@ -5,7 +5,6 @@ import jakarta.validation.constraints.Size;
 
 import java.time.LocalDate;
 
-
 public record TaskDto (
         Long id,
         @NotBlank(message = "Title is mandatory")
