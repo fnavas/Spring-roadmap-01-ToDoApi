@@ -2,6 +2,7 @@ package com.fnavas.todoapi.api;
 
 import com.fnavas.todoapi.dto.TaskDto;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -14,11 +15,12 @@ import com.fnavas.todoapi.exception.ErrorResponse;
 import java.util.List;
 
 public interface ApiTaskController {
-    @Operation(summary = "Get All Tasks", description = "Retrieve a list of all tasks")
+    @Operation(summary = "Get All Tasks", description = "Retrieve a list of all tasks with optional filtering by title")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved list of tasks"),
     })
     ResponseEntity<List<TaskDto>> getAllTasks(
+            @Parameter(description = "Optional title filter to search for tasks containing the specified title")
             String title
     );
 
