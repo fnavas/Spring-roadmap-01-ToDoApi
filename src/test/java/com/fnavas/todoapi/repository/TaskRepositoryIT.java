@@ -53,35 +53,6 @@ class TaskRepositoryIT {
         assertEquals("Task One", tasksNotCompleted.get(0).getTitle());
     }
 
-    @Test
-    void findByTitleContainingIgnoreCase_shouldReturnsTasksWithTitleContaining() {
-        List<Task> results = taskRepository.findByTitleContainingIgnoreCase("one");
-
-        assertEquals(1, results.size());
-        assertEquals("Task One", results.get(0).getTitle());
-    }
-
-    @Test
-    void findByTitleContainingIgnoreCase_NoMatch() {
-        List<Task> results = taskRepository.findByTitleContainingIgnoreCase("NonExisting");
-
-        assertTrue(results.isEmpty());
-    }
-
-    @Test
-    void findByDescriptionContainingIgnoreCase_shouldReturnsTaskWithDescriptionContaining() {
-        List<Task> results = taskRepository.findByDescriptionContainingIgnoreCase("spring");
-
-        assertEquals(1, results.size());
-        assertEquals("Learn Spring Boot Testing", results.get(0).getDescription());
-    }
-
-    @Test
-    void findByDescriptionContainingIgnoreCase_NoMatch() {
-        List<Task> results = taskRepository.findByDescriptionContainingIgnoreCase("NonExisting");
-
-        assertTrue(results.isEmpty());
-    }
 
     @Test
     void createTask_withTitleNull_shouldThrowsException() {
@@ -94,7 +65,7 @@ class TaskRepositoryIT {
 
     @Test
     void updateTask_withCreatedDate_shouldNotChange() {
-        Task task = taskRepository.findByTitleContainingIgnoreCase("Task One").get(0);
+        Task task = taskRepository.findAll().get(0);
         LocalDate originalDate = task.getCreated();
         Long id = task.getId();
         task.setCreated(originalDate.plusDays(1));

@@ -26,7 +26,7 @@ class GlobalExceptionHandlerTest {
 
     @Test
     void exceptionHandleException_shouldHandleException() throws Exception {
-        Mockito.when(taskService.findAll(null)).thenThrow(new RuntimeException("Database error"));
+        Mockito.when(taskService.findAll(null, null)).thenThrow(new RuntimeException("Database error"));
 
         mockMvc.perform(get("/api/v1/tasks")
                         .contentType(MediaType.APPLICATION_JSON))

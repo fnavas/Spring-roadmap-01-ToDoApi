@@ -38,7 +38,7 @@ class TaskRestControllerTest {
     @Test
     void getAllTasks_shouldReturnTaskList() throws Exception {
         List<TaskDto> taskDtos  = List.of(sampleTaskDto(), sampleTaskDto());
-        Mockito.when(taskService.findAll(null)).thenReturn(taskDtos);
+        Mockito.when(taskService.findAll(null, null)).thenReturn(taskDtos);
 
         mockMvc.perform(get("/api/v1/tasks"))
                 .andExpect(status().isOk())
@@ -48,7 +48,7 @@ class TaskRestControllerTest {
                 .andExpect(jsonPath("$[0].title").value("title"))
                 .andExpect(jsonPath("$[0].description").value("description"));
 
-        Mockito.verify(taskService, Mockito.times(1)).findAll(null);
+        Mockito.verify(taskService, Mockito.times(1)).findAll(null, null);
     }
 
     @Test
@@ -103,7 +103,7 @@ class TaskRestControllerTest {
     void getTasksByTitle_shouldReturnTasksByTitle() throws Exception {
         String title = "title";
         List<TaskDto> taskDtos = List.of(sampleTaskDto(), sampleTaskDto());
-        Mockito.when(taskService.findAll(title)).thenReturn(taskDtos);
+        Mockito.when(taskService.findAll(title, null)).thenReturn(taskDtos);
 
         mockMvc.perform(get("/api/v1/tasks?title={title}", title))
                 .andExpect(status().isOk())
@@ -113,16 +113,16 @@ class TaskRestControllerTest {
                 .andExpect(jsonPath("$[0].title").value("title"))
                 .andExpect(jsonPath("$[0].description").value("description"));
 
-        Mockito.verify(taskService, Mockito.times(1)).findAll(title);
+        Mockito.verify(taskService, Mockito.times(1)).findAll(title, null);
     }
 
     @Test
     void getTasksByDescription_shouldReturnTasksByDescription() throws Exception {
         String description = "description";
         List<TaskDto> taskDtos = List.of(sampleTaskDto(), sampleTaskDto());
-        Mockito.when(taskService.findByDescriptionContainingIgnoreCase(description)).thenReturn(taskDtos);
+        Mockito.when(taskService.findAll(null,description)).thenReturn(taskDtos);
 
-        mockMvc.perform(get("/api/v1/tasks/search-by-description/{description}", description))
+        mockMvc.perform(get("/api/v1/tasks?description={description}", description))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.size()").value(2))
@@ -130,7 +130,7 @@ class TaskRestControllerTest {
                 .andExpect(jsonPath("$[0].title").value("title"))
                 .andExpect(jsonPath("$[0].description").value("description"));
 
-        Mockito.verify(taskService, Mockito.times(1)).findByDescriptionContainingIgnoreCase(description);
+        Mockito.verify(taskService, Mockito.times(1)).findAll(null, description);
     }
 
     @Test

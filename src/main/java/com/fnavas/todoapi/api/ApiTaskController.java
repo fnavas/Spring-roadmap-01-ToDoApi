@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import com.fnavas.todoapi.exception.ErrorResponse;
 
@@ -21,7 +22,9 @@ public interface ApiTaskController {
     })
     ResponseEntity<List<TaskDto>> getAllTasks(
             @Parameter(description = "Optional title filter to search for tasks containing the specified title")
-            String title
+            String title,
+            @Parameter(description = "Optional description filter to search for tasks containing the specified description")
+            String description
     );
 
     @Operation(summary = "Get Task by ID", description = "Retrieve a task by its ID")
@@ -47,12 +50,6 @@ public interface ApiTaskController {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved list of pending tasks"),
     })
     ResponseEntity<List<TaskDto>> getPendingTasks();
-
-    @Operation(summary = "Get Tasks by Description", description = "Retrieve a list of tasks that match the given description")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully retrieved list of tasks matching the description"),
-    })
-    ResponseEntity<List<TaskDto>> getTasksByDescription(String description);
 
     @Operation(summary = "Create Task", description = "Create a new task")
     @RequestBody(

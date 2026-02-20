@@ -11,7 +11,6 @@ import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import tools.jackson.databind.ObjectMapper;
-
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -106,7 +105,7 @@ public class TaskRestControllerIT {
         taskRepository.save(task1);
         taskRepository.save(task2);
 
-        mockMvc.perform(get("/api/v1/tasks?title{title}", "title")
+        mockMvc.perform(get("/api/v1/tasks")
                 .param("title", "TITLE")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -127,7 +126,7 @@ public class TaskRestControllerIT {
         taskRepository.save(task1);
         taskRepository.save(task2);
 
-        mockMvc.perform(get("/api/v1/tasks?title={title}", "nonexistent")
+        mockMvc.perform(get("/api/v1/tasks")
                 .param("title", "NONEXISTENT")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -148,7 +147,7 @@ public class TaskRestControllerIT {
         taskRepository.save(task1);
         taskRepository.save(task2);
 
-        mockMvc.perform(get("/api/v1/tasks/search-by-description/{description}", "description")
+        mockMvc.perform(get("/api/v1/tasks")
                 .param("description", "DESCRIPTION")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -169,7 +168,7 @@ public class TaskRestControllerIT {
         taskRepository.save(task1);
         taskRepository.save(task2);
 
-        mockMvc.perform(get("/api/v1/tasks/search-by-description/{description}", "nonexistent")
+        mockMvc.perform(get("/api/v1/tasks")
                 .param("description", "NONEXISTENT")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())

@@ -94,7 +94,7 @@ class TaskServiceImplTest {
         Mockito.when(taskRepository.findAll(any(Specification.class))).thenReturn(mockTasks);
         Mockito.when(taskMapper.toDto(mockTask)).thenReturn(mockTaskDto);
 
-        List<TaskDto> taskDtos = taskServiceImpl.findAll(null);
+        List<TaskDto> taskDtos = taskServiceImpl.findAll(null, null);
 
         assertNotNull(taskDtos);
         assertEquals(taskDtos.size(), mockTasks.size());
@@ -110,7 +110,7 @@ class TaskServiceImplTest {
         Mockito.when(taskRepository.findAll(any(Specification.class))).thenReturn(mockTasks);
         Mockito.when(taskMapper.toDto(mockTask)).thenReturn(mockTaskDto);
 
-        List<TaskDto> taskDtos = taskServiceImpl.findAll(title);
+        List<TaskDto> taskDtos = taskServiceImpl.findAll(title, null);
 
         assertNotNull(taskDtos);
         assertEquals(taskDtos.size(), mockTasks.size());
@@ -123,14 +123,14 @@ class TaskServiceImplTest {
         List<Task> mockTasks = List.of(sampleTask(), sampleTask());
         Task  mockTask = sampleTask();
         TaskDto mockTaskDto = sampleTaskDto();
-        Mockito.when(taskRepository.findByDescriptionContainingIgnoreCase(description)).thenReturn(mockTasks);
+        Mockito.when(taskRepository.findAll(any(Specification.class))).thenReturn(mockTasks);
         Mockito.when(taskMapper.toDto(mockTask)).thenReturn(mockTaskDto);
 
-        List<TaskDto> taskDtos = taskServiceImpl.findByDescriptionContainingIgnoreCase(description);
+        List<TaskDto> taskDtos = taskServiceImpl.findAll(null, description);
 
         assertNotNull(taskDtos);
         assertEquals(taskDtos.size(), mockTasks.size());
-        Mockito.verify(taskRepository, Mockito.times(1)).findByDescriptionContainingIgnoreCase(description);
+        Mockito.verify(taskRepository, Mockito.times(1)).findAll(any(Specification.class));
     }
 
     @Test
@@ -147,7 +147,6 @@ class TaskServiceImplTest {
         assertEquals(taskDto.title(), mockTask.getTitle());
         assertEquals(taskDto.description(), mockTask.getDescription());
         Mockito.verify(taskRepository, Mockito.times(1)).save(mockTask);
-
     }
 
     @Test

@@ -7,8 +7,7 @@ import java.util.List;
 public interface TaskService {
     TaskDto findById(Long id);
     List<TaskDto> findByCompleted(Boolean completed);
-    List<TaskDto> findAll(String title);
-    List<TaskDto> findByDescriptionContainingIgnoreCase(String description);
+    List<TaskDto> findAll(String title, String description);
     TaskDto createTask(TaskDto taskDto);
     TaskDto updateTaskById(Long id,TaskDto taskDto);
     void deleteTaskById(Long id);

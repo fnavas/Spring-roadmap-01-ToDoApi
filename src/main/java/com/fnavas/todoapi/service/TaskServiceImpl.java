@@ -40,7 +40,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public List<TaskDto> findAll(String title) {
+    public List<TaskDto> findAll(String title, String description) {
         log.info("[findAll]-Finding all tasks");
         Specification<Task> spec = Specification.where((root, query, cb) -> cb.conjunction());
         if (title != null && !title.isBlank()) {
@@ -49,17 +49,15 @@ public class TaskServiceImpl implements TaskService {
             spec = spec.and((root, query, criteriaBuilder) ->
                     criteriaBuilder.like(criteriaBuilder.lower(root.get("title")), "%" + title.toLowerCase() + "%"));
         }
-        List<Task> tasks = taskRepository.findAll(spec);
-        return tasks.stream()
-                .map(taskMapper::toDto)
-                .toList();
-    }
 
-    @Override
-    public List<TaskDto> findByDescriptionContainingIgnoreCase(String description) {
-        log.info("[findByDescriptionContainingIgnoreCase]-Finding tasks by description containing ignore case");
-        log.debug("[findByDescriptionContainingIgnoreCase]-Finding tasks by description containing ignore case {}", description);
-        List<Task> tasks = taskRepository.findByDescriptionContainingIgnoreCase(description);
+        if (description != null && !description.isBlank()) {
+            log.info("[findAll]-Finding all tasks with description containing ignore case");
+            log.debug("[findAll]-Finding all tasks with description containing ignore case {}", description);
+            spec = spec.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.like(criteriaBuilder.lower(root.get("description")), "%" + description.toLowerCase() + "%"));
+        }
+
+        List<Task> tasks = taskRepository.findAll(spec);
         return tasks.stream()
                 .map(taskMapper::toDto)
                 .toList();
