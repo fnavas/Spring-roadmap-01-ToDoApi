@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 import org.springframework.boot.jpa.test.autoconfigure.TestEntityManager;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -39,6 +40,38 @@ class TaskRepositoryIT {
         testEntityManager.persist(task1);
         testEntityManager.persist(task2);
         testEntityManager.flush();
+    }
+    @Test
+    void findAll_withTitle_shouldReturnFilteredTasks() {
+        String titleFilter = "ONE";
+        Specification<Task> spec = Specification.where((root, query, cb) ->
+                cb.like(cb.lower(root.get("title")), "%" + titleFilter.toLowerCase() + "%"));
+
+        List<Task> results = taskRepository.findAll(spec);
+
+        assertEquals(1, results.size());
+        assertEquals("Task One", results.get(0).getTitle());
+    }
+
+    @Test
+    void findAll_withDescription_shouldReturnFilteredTasks() {
+        String descFilter = "UNIT TESTS";
+        Specification<Task> spec = Specification.where((root, query, cb) ->
+                cb.like(cb.lower(root.get("description")), "%" + descFilter.toLowerCase() + "%"));
+
+        List<Task> results = taskRepository.findAll(spec);
+
+        assertEquals(1, results.size());
+        assertEquals("Task Two", results.get(0).getTitle());
+    }
+
+    @Test
+    void findAll_withNoFilters_shouldReturnAllTasks() {
+        Specification<Task> spec = Specification.where((root, query, cb) -> cb.conjunction());
+
+        List<Task> results = taskRepository.findAll(spec);
+
+        assertEquals(2, results.size());
     }
 
     @Test

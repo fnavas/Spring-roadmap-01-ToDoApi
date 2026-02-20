@@ -102,7 +102,7 @@ class TaskServiceImplTest {
     }
 
     @Test
-    void findByTitleContainingIgnoreCase_returnsTasks() {
+    void findAll_withTitle_returnsTasks() {
         String title = "title";
         List<Task> mockTasks = List.of(sampleTask(), sampleTask());
         Task  mockTask = sampleTask();
@@ -118,7 +118,22 @@ class TaskServiceImplTest {
     }
 
     @Test
-    void findByDescriptionContainingIgnoreCase_returnsTasks() {
+    void findAll_withBlankTitleAndDescription_returnsTasks() {
+        List<Task> mockTasks = List.of(sampleTask(), sampleTask());
+        Task  mockTask = sampleTask();
+        TaskDto mockTaskDto = sampleTaskDto();
+        Mockito.when(taskRepository.findAll(any(Specification.class))).thenReturn(mockTasks);
+        Mockito.when(taskMapper.toDto(mockTask)).thenReturn(mockTaskDto);
+
+        List<TaskDto> taskDtos = taskServiceImpl.findAll(" ", " ");
+
+        assertNotNull(taskDtos);
+        assertEquals(taskDtos.size(), mockTasks.size());
+        Mockito.verify(taskRepository, Mockito.times(1)).findAll(any(Specification.class));
+    }
+
+    @Test
+    void findAll_withDescription_returnsTasks() {
         String description = "description";
         List<Task> mockTasks = List.of(sampleTask(), sampleTask());
         Task  mockTask = sampleTask();
@@ -127,6 +142,23 @@ class TaskServiceImplTest {
         Mockito.when(taskMapper.toDto(mockTask)).thenReturn(mockTaskDto);
 
         List<TaskDto> taskDtos = taskServiceImpl.findAll(null, description);
+
+        assertNotNull(taskDtos);
+        assertEquals(taskDtos.size(), mockTasks.size());
+        Mockito.verify(taskRepository, Mockito.times(1)).findAll(any(Specification.class));
+    }
+
+    @Test
+    void findAll_withTitleAndDescription_returnsTasks() {
+        String title = "title";
+        String description = "description";
+        List<Task> mockTasks = List.of(sampleTask(), sampleTask());
+        Task  mockTask = sampleTask();
+        TaskDto mockTaskDto = sampleTaskDto();
+        Mockito.when(taskRepository.findAll(any(Specification.class))).thenReturn(mockTasks);
+        Mockito.when(taskMapper.toDto(mockTask)).thenReturn(mockTaskDto);
+
+        List<TaskDto> taskDtos = taskServiceImpl.findAll(title, description);
 
         assertNotNull(taskDtos);
         assertEquals(taskDtos.size(), mockTasks.size());
