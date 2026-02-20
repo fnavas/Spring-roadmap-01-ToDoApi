@@ -24,9 +24,11 @@ public class TaskRestController implements ApiTaskController {
 
     @Override
     @GetMapping("/tasks")
-    public ResponseEntity<List<TaskDto>> getAllTasks() {
+    public ResponseEntity<List<TaskDto>> getAllTasks(
+            @RequestParam(required = false) String title
+    ) {
         log.info("[getAllTasks]-Getting all tasks");
-        List<TaskDto> taskDtos = taskService.findAll();
+        List<TaskDto> taskDtos = taskService.findAll(title);
         return ResponseEntity.ok(taskDtos);
     }
 
@@ -53,15 +55,6 @@ public class TaskRestController implements ApiTaskController {
         log.info("[getPendingTasks]-Getting pending tasks");
         List<TaskDto> pendingTasks = taskService.findByCompleted(false);
         return ResponseEntity.ok(pendingTasks);
-    }
-
-    @Override
-    @GetMapping("/tasks/search-by-title/{title}")
-    public ResponseEntity<List<TaskDto>> getTasksByTitle(@PathVariable String title) {
-        log.info("[getTasksByTitle]-Getting tasks by title");
-        log.debug("[getTasksByTitle]-Getting tasks by title {}", title);
-        List<TaskDto> taskDtos = taskService.findByTitleContainingIgnoreCase(title);
-        return ResponseEntity.ok(taskDtos);
     }
 
     @Override

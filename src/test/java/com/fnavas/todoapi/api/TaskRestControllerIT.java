@@ -106,7 +106,7 @@ public class TaskRestControllerIT {
         taskRepository.save(task1);
         taskRepository.save(task2);
 
-        mockMvc.perform(get("/api/v1/tasks/search-by-title/{title}", "title")
+        mockMvc.perform(get("/api/v1/tasks?title{title}", "title")
                 .param("title", "TITLE")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -127,7 +127,7 @@ public class TaskRestControllerIT {
         taskRepository.save(task1);
         taskRepository.save(task2);
 
-        mockMvc.perform(get("/api/v1/tasks/search-by-title/{title}", "nonexistent")
+        mockMvc.perform(get("/api/v1/tasks?title={title}", "nonexistent")
                 .param("title", "NONEXISTENT")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())

@@ -18,7 +18,9 @@ public interface ApiTaskController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved list of tasks"),
     })
-    ResponseEntity<List<TaskDto>> getAllTasks();
+    ResponseEntity<List<TaskDto>> getAllTasks(
+            String title
+    );
 
     @Operation(summary = "Get Task by ID", description = "Retrieve a task by its ID")
     @ApiResponses(value = {
@@ -43,12 +45,6 @@ public interface ApiTaskController {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved list of pending tasks"),
     })
     ResponseEntity<List<TaskDto>> getPendingTasks();
-
-    @Operation(summary = "Get Tasks by Title", description = "Retrieve a list of tasks that match the given title")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully retrieved list of tasks matching the title"),
-    })
-    ResponseEntity<List<TaskDto>> getTasksByTitle(String title);
 
     @Operation(summary = "Get Tasks by Description", description = "Retrieve a list of tasks that match the given description")
     @ApiResponses(value = {

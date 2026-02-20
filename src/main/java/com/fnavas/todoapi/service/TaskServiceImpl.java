@@ -7,6 +7,7 @@ import com.fnavas.todoapi.mapper.TaskMapper;
 import com.fnavas.todoapi.repository.TaskRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -39,19 +40,16 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public List<TaskDto> findAll() {
+    public List<TaskDto> findAll(String title) {
         log.info("[findAll]-Finding all tasks");
-        List<Task> tasks = taskRepository.findAll();
-        return tasks.stream()
-                .map(taskMapper::toDto)
-                .toList();
-    }
-
-    @Override
-    public List<TaskDto> findByTitleContainingIgnoreCase(String title) {
-        log.info("[findByTitleContainingIgnoreCase]-Finding tasks by title containing ignore case");
-        log.debug("[findByTitleContainingIgnoreCase]-Finding tasks by title containing ignore case {}", title);
-        List<Task> tasks = taskRepository.findByTitleContainingIgnoreCase(title);
+        Specification<Task> spec = Specification.where((root, query, cb) -> cb.conjunction());
+        if (title != null && !title.isBlank()) {
+            log.info("[findAll]-Finding all tasks with title containing ignore case");
+            log.debug("[findAll]-Finding all tasks with title containing ignore case {}", title);
+            spec = spec.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.like(criteriaBuilder.lower(root.get("title")), "%" + title.toLowerCase() + "%"));
+        }
+        List<Task> tasks = taskRepository.findAll(spec);
         return tasks.stream()
                 .map(taskMapper::toDto)
                 .toList();

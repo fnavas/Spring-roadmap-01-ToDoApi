@@ -11,11 +11,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 
 @ExtendWith(MockitoExtension.class)
 class TaskServiceImplTest {
@@ -89,14 +91,14 @@ class TaskServiceImplTest {
         List<Task> mockTasks = List.of(sampleTask(), sampleTask());
         Task  mockTask = sampleTask();
         TaskDto mockTaskDto = sampleTaskDto();
-        Mockito.when(taskRepository.findAll()).thenReturn(mockTasks);
+        Mockito.when(taskRepository.findAll(any(Specification.class))).thenReturn(mockTasks);
         Mockito.when(taskMapper.toDto(mockTask)).thenReturn(mockTaskDto);
 
-        List<TaskDto> taskDtos = taskServiceImpl.findAll();
+        List<TaskDto> taskDtos = taskServiceImpl.findAll(null);
 
         assertNotNull(taskDtos);
         assertEquals(taskDtos.size(), mockTasks.size());
-        Mockito.verify(taskRepository, Mockito.times(1)).findAll();
+        Mockito.verify(taskRepository, Mockito.times(1)).findAll(any(Specification.class));
     }
 
     @Test
@@ -105,14 +107,14 @@ class TaskServiceImplTest {
         List<Task> mockTasks = List.of(sampleTask(), sampleTask());
         Task  mockTask = sampleTask();
         TaskDto mockTaskDto = sampleTaskDto();
-        Mockito.when(taskRepository.findByTitleContainingIgnoreCase(title)).thenReturn(mockTasks);
+        Mockito.when(taskRepository.findAll(any(Specification.class))).thenReturn(mockTasks);
         Mockito.when(taskMapper.toDto(mockTask)).thenReturn(mockTaskDto);
 
-        List<TaskDto> taskDtos = taskServiceImpl.findByTitleContainingIgnoreCase(title);
+        List<TaskDto> taskDtos = taskServiceImpl.findAll(title);
 
         assertNotNull(taskDtos);
         assertEquals(taskDtos.size(), mockTasks.size());
-        Mockito.verify(taskRepository, Mockito.times(1)).findByTitleContainingIgnoreCase(title);
+        Mockito.verify(taskRepository, Mockito.times(1)).findAll(any(Specification.class));
     }
 
     @Test
