@@ -1,31 +1,25 @@
 package com.fnavas.todoapi.api;
 
 import com.fnavas.todoapi.dto.TaskDto;
+import com.fnavas.todoapi.dto.TaskFilter;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import com.fnavas.todoapi.exception.ErrorResponse;
 
 import java.util.List;
 
 public interface ApiTaskController {
-    @Operation(summary = "Get All Tasks", description = "Retrieve a list of all tasks with optional filtering by title")
+    @Operation(summary = "List Tasks with dynamic filter", description = "Retrieve a list of all tasks with optional filtering by title")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved list of tasks"),
     })
-    ResponseEntity<List<TaskDto>> getAllTasks(
-            @Parameter(description = "Optional title filter to search for tasks containing the specified title")
-            String title,
-            @Parameter(description = "Optional description filter to search for tasks containing the specified description")
-            String description
-    );
+    ResponseEntity<List<TaskDto>> getAllTasks(TaskFilter filter);
 
     @Operation(summary = "Get Task by ID", description = "Retrieve a task by its ID")
     @ApiResponses(value = {
@@ -37,19 +31,6 @@ public interface ApiTaskController {
             )
     })
     ResponseEntity<TaskDto> getTaskById(Long id);
-
-    @Operation(summary = "Get Completed Tasks", description = "Retrieve a list of completed tasks")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully retrieved list of completed tasks"),
-    })
-    ResponseEntity<List<TaskDto>> getCompletedTasks();
-
-
-    @Operation(summary = "Get Pending Tasks", description = "Retrieve a list of pending tasks")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully retrieved list of pending tasks"),
-    })
-    ResponseEntity<List<TaskDto>> getPendingTasks();
 
     @Operation(summary = "Create Task", description = "Create a new task")
     @RequestBody(

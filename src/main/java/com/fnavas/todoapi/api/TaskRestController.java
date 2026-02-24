@@ -1,11 +1,13 @@
 package com.fnavas.todoapi.api;
 
 import com.fnavas.todoapi.dto.TaskDto;
+import com.fnavas.todoapi.dto.TaskFilter;
 import com.fnavas.todoapi.service.TaskService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -25,11 +27,10 @@ public class TaskRestController implements ApiTaskController {
     @Override
     @GetMapping("/tasks")
     public ResponseEntity<List<TaskDto>> getAllTasks(
-            @RequestParam(required = false) String title,
-            @RequestParam(required = false) String description
+            @ParameterObject TaskFilter taskFilter
     ) {
         log.info("[getAllTasks]-Getting all tasks");
-        List<TaskDto> taskDtos = taskService.findAll(title, description);
+        List<TaskDto> taskDtos = taskService.findAll(taskFilter);
         return ResponseEntity.ok(taskDtos);
     }
 
@@ -40,22 +41,6 @@ public class TaskRestController implements ApiTaskController {
         log.debug("[getTaskById]-Getting task by id {}", id);
         TaskDto taskDto = taskService.findById(id);
         return ResponseEntity.ok(taskDto);
-    }
-
-    @Override
-    @GetMapping("/tasks/completed")
-    public ResponseEntity<List<TaskDto>> getCompletedTasks() {
-        log.info("[getCompletedTasks]-Getting completed tasks");
-        List<TaskDto> completedTasks = taskService.findByCompleted(true);
-        return ResponseEntity.ok(completedTasks);
-    }
-
-    @Override
-    @GetMapping("/tasks/pending")
-    public ResponseEntity<List<TaskDto>> getPendingTasks() {
-        log.info("[getPendingTasks]-Getting pending tasks");
-        List<TaskDto> pendingTasks = taskService.findByCompleted(false);
-        return ResponseEntity.ok(pendingTasks);
     }
 
     @Override

@@ -38,7 +38,7 @@ class TaskRestControllerTest {
     @Test
     void getAllTasks_shouldReturnTaskList() throws Exception {
         List<TaskDto> taskDtos  = List.of(sampleTaskDto(), sampleTaskDto());
-        Mockito.when(taskService.findAll(null, null)).thenReturn(taskDtos);
+        Mockito.when(taskService.findAll(null)).thenReturn(taskDtos);
 
         mockMvc.perform(get("/api/v1/tasks"))
                 .andExpect(status().isOk())
