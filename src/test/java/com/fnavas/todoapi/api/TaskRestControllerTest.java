@@ -1,6 +1,7 @@
 package com.fnavas.todoapi.api;
 
 import com.fnavas.todoapi.dto.TaskDto;
+import com.fnavas.todoapi.dto.TaskFilter;
 import com.fnavas.todoapi.service.TaskService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -38,7 +39,7 @@ class TaskRestControllerTest {
     @Test
     void getAllTasks_shouldReturnTaskList() throws Exception {
         List<TaskDto> taskDtos  = List.of(sampleTaskDto(), sampleTaskDto());
-        Mockito.when(taskService.findAll(null)).thenReturn(taskDtos);
+        Mockito.when(taskService.findAll(any(TaskFilter.class))).thenReturn(taskDtos);
 
         mockMvc.perform(get("/api/v1/tasks"))
                 .andExpect(status().isOk())
@@ -48,7 +49,7 @@ class TaskRestControllerTest {
                 .andExpect(jsonPath("$[0].title").value("title"))
                 .andExpect(jsonPath("$[0].description").value("description"));
 
-        Mockito.verify(taskService, Mockito.times(1)).findAll(null, null);
+        Mockito.verify(taskService, Mockito.times(1)).findAll(any(TaskFilter.class));
     }
 
     @Test
@@ -70,9 +71,9 @@ class TaskRestControllerTest {
     @Test
     void getCompletedTasks_shouldReturnCompletedTasks() throws Exception {
         List<TaskDto> completedTasks = List.of(sampleTaskDto(), sampleTaskDto());
-        Mockito.when(taskService.findByCompleted(true)).thenReturn(completedTasks);
+        Mockito.when(taskService.findAll(any(TaskFilter.class))).thenReturn(completedTasks);
 
-        mockMvc.perform(get("/api/v1/tasks/completed"))
+        mockMvc.perform(get("/api/v1/tasks?completed=true"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.size()").value(2))
@@ -80,15 +81,15 @@ class TaskRestControllerTest {
                 .andExpect(jsonPath("$[0].title").value("title"))
                 .andExpect(jsonPath("$[0].description").value("description"));
 
-        Mockito.verify(taskService, Mockito.times(1)).findByCompleted(true);
+        Mockito.verify(taskService, Mockito.times(1)).findAll(any(TaskFilter.class));
     }
 
     @Test
     void getPendingTasks_shouldReturnPendingTasks() throws Exception {
         List<TaskDto> pendingTasks = List.of(sampleTaskDto(), sampleTaskDto());
-        Mockito.when(taskService.findByCompleted(false)).thenReturn(pendingTasks);
+        Mockito.when(taskService.findAll(any(TaskFilter.class))).thenReturn(pendingTasks);
 
-        mockMvc.perform(get("/api/v1/tasks/pending"))
+        mockMvc.perform(get("/api/v1/tasks?completed=false"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.size()").value(2))
@@ -96,14 +97,14 @@ class TaskRestControllerTest {
                 .andExpect(jsonPath("$[0].title").value("title"))
                 .andExpect(jsonPath("$[0].description").value("description"));
 
-        Mockito.verify(taskService, Mockito.times(1)).findByCompleted(false);
+        Mockito.verify(taskService, Mockito.times(1)).findAll(any(TaskFilter.class));
     }
 
     @Test
     void getTasksByTitle_shouldReturnTasksByTitle() throws Exception {
         String title = "title";
         List<TaskDto> taskDtos = List.of(sampleTaskDto(), sampleTaskDto());
-        Mockito.when(taskService.findAll(title, null)).thenReturn(taskDtos);
+        Mockito.when(taskService.findAll(any(TaskFilter.class))).thenReturn(taskDtos);
 
         mockMvc.perform(get("/api/v1/tasks?title={title}", title))
                 .andExpect(status().isOk())
@@ -113,14 +114,14 @@ class TaskRestControllerTest {
                 .andExpect(jsonPath("$[0].title").value("title"))
                 .andExpect(jsonPath("$[0].description").value("description"));
 
-        Mockito.verify(taskService, Mockito.times(1)).findAll(title, null);
+        Mockito.verify(taskService, Mockito.times(1)).findAll(any(TaskFilter.class));
     }
 
     @Test
     void getTasksByDescription_shouldReturnTasksByDescription() throws Exception {
         String description = "description";
         List<TaskDto> taskDtos = List.of(sampleTaskDto(), sampleTaskDto());
-        Mockito.when(taskService.findAll(null,description)).thenReturn(taskDtos);
+        Mockito.when(taskService.findAll(any(TaskFilter.class))).thenReturn(taskDtos);
 
         mockMvc.perform(get("/api/v1/tasks?description={description}", description))
                 .andExpect(status().isOk())
@@ -130,7 +131,7 @@ class TaskRestControllerTest {
                 .andExpect(jsonPath("$[0].title").value("title"))
                 .andExpect(jsonPath("$[0].description").value("description"));
 
-        Mockito.verify(taskService, Mockito.times(1)).findAll(null, description);
+        Mockito.verify(taskService, Mockito.times(1)).findAll(any(TaskFilter.class));
     }
 
     @Test

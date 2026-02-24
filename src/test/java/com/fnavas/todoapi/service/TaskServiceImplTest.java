@@ -1,6 +1,7 @@
 package com.fnavas.todoapi.service;
 
 import com.fnavas.todoapi.dto.TaskDto;
+import com.fnavas.todoapi.dto.TaskFilter;
 import com.fnavas.todoapi.entity.Task;
 import com.fnavas.todoapi.exception.TaskNotFoundException;
 import com.fnavas.todoapi.mapper.TaskMapper;
@@ -71,30 +72,15 @@ class TaskServiceImplTest {
     }
 
     @Test
-    void findByCompleted_returnsTasks() {
-        Task mockTask = sampleTask();
-        TaskDto mockTaskDto = sampleTaskDto();
-        List<Task> mockTasks = List.of(sampleTask(), sampleTask());
-
-        Mockito.when(taskRepository.findByCompleted(true)).thenReturn(mockTasks);
-        Mockito.when(taskMapper.toDto(mockTask)).thenReturn(mockTaskDto);
-
-        List<TaskDto> taskDtos = taskServiceImpl.findByCompleted(true);
-
-        assertNotNull(taskDtos);
-        assertEquals(taskDtos.size(), mockTasks.size());
-        Mockito.verify(taskRepository, Mockito.times(1)).findByCompleted(true);
-    }
-
-    @Test
     void findAll_returnsTasks() {
+        TaskFilter taskFilter = new TaskFilter();
         List<Task> mockTasks = List.of(sampleTask(), sampleTask());
         Task  mockTask = sampleTask();
         TaskDto mockTaskDto = sampleTaskDto();
         Mockito.when(taskRepository.findAll(any(Specification.class))).thenReturn(mockTasks);
         Mockito.when(taskMapper.toDto(mockTask)).thenReturn(mockTaskDto);
 
-        List<TaskDto> taskDtos = taskServiceImpl.findAll(null, null);
+        List<TaskDto> taskDtos = taskServiceImpl.findAll(taskFilter);
 
         assertNotNull(taskDtos);
         assertEquals(taskDtos.size(), mockTasks.size());
@@ -103,14 +89,15 @@ class TaskServiceImplTest {
 
     @Test
     void findAll_withTitle_returnsTasks() {
-        String title = "title";
+        TaskFilter taskFilter = new TaskFilter();
+        taskFilter.setTitle("title");
         List<Task> mockTasks = List.of(sampleTask(), sampleTask());
         Task  mockTask = sampleTask();
         TaskDto mockTaskDto = sampleTaskDto();
         Mockito.when(taskRepository.findAll(any(Specification.class))).thenReturn(mockTasks);
         Mockito.when(taskMapper.toDto(mockTask)).thenReturn(mockTaskDto);
 
-        List<TaskDto> taskDtos = taskServiceImpl.findAll(title, null);
+        List<TaskDto> taskDtos = taskServiceImpl.findAll(taskFilter);
 
         assertNotNull(taskDtos);
         assertEquals(taskDtos.size(), mockTasks.size());
@@ -119,13 +106,16 @@ class TaskServiceImplTest {
 
     @Test
     void findAll_withBlankTitleAndDescription_returnsTasks() {
+        TaskFilter taskFilter = new TaskFilter();
+        taskFilter.setTitle(" ");
+        taskFilter.setDescription(" ");
         List<Task> mockTasks = List.of(sampleTask(), sampleTask());
         Task  mockTask = sampleTask();
         TaskDto mockTaskDto = sampleTaskDto();
         Mockito.when(taskRepository.findAll(any(Specification.class))).thenReturn(mockTasks);
         Mockito.when(taskMapper.toDto(mockTask)).thenReturn(mockTaskDto);
 
-        List<TaskDto> taskDtos = taskServiceImpl.findAll(" ", " ");
+        List<TaskDto> taskDtos = taskServiceImpl.findAll(taskFilter);
 
         assertNotNull(taskDtos);
         assertEquals(taskDtos.size(), mockTasks.size());
@@ -134,14 +124,15 @@ class TaskServiceImplTest {
 
     @Test
     void findAll_withDescription_returnsTasks() {
-        String description = "description";
+        TaskFilter taskFilter = new TaskFilter();
+        taskFilter.setDescription("description");
         List<Task> mockTasks = List.of(sampleTask(), sampleTask());
         Task  mockTask = sampleTask();
         TaskDto mockTaskDto = sampleTaskDto();
         Mockito.when(taskRepository.findAll(any(Specification.class))).thenReturn(mockTasks);
         Mockito.when(taskMapper.toDto(mockTask)).thenReturn(mockTaskDto);
 
-        List<TaskDto> taskDtos = taskServiceImpl.findAll(null, description);
+        List<TaskDto> taskDtos = taskServiceImpl.findAll(taskFilter);
 
         assertNotNull(taskDtos);
         assertEquals(taskDtos.size(), mockTasks.size());
@@ -150,15 +141,16 @@ class TaskServiceImplTest {
 
     @Test
     void findAll_withTitleAndDescription_returnsTasks() {
-        String title = "title";
-        String description = "description";
+        TaskFilter taskFilter = new TaskFilter();
+        taskFilter.setTitle("title");
+        taskFilter.setDescription("description");
         List<Task> mockTasks = List.of(sampleTask(), sampleTask());
         Task  mockTask = sampleTask();
         TaskDto mockTaskDto = sampleTaskDto();
         Mockito.when(taskRepository.findAll(any(Specification.class))).thenReturn(mockTasks);
         Mockito.when(taskMapper.toDto(mockTask)).thenReturn(mockTaskDto);
 
-        List<TaskDto> taskDtos = taskServiceImpl.findAll(title, description);
+        List<TaskDto> taskDtos = taskServiceImpl.findAll(taskFilter);
 
         assertNotNull(taskDtos);
         assertEquals(taskDtos.size(), mockTasks.size());

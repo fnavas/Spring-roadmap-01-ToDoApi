@@ -1,5 +1,6 @@
 package com.fnavas.todoapi.exception;
 
+import com.fnavas.todoapi.dto.TaskFilter;
 import com.fnavas.todoapi.service.TaskService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -10,6 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -26,7 +28,7 @@ class GlobalExceptionHandlerTest {
 
     @Test
     void exceptionHandleException_shouldHandleException() throws Exception {
-        Mockito.when(taskService.findAll(null, null)).thenThrow(new RuntimeException("Database error"));
+        Mockito.when(taskService.findAll(any(TaskFilter.class))).thenThrow(new RuntimeException("Database error"));
 
         mockMvc.perform(get("/api/v1/tasks")
                         .contentType(MediaType.APPLICATION_JSON))
