@@ -48,18 +48,10 @@ public class TaskServiceImpl implements TaskService {
                     criteriaBuilder.like(criteriaBuilder.lower(root.get("description")), "%" + filter.getDescription().toLowerCase() + "%"));
         }
 
-        if (filter.getCompleted() != null && !filter.getCompleted()) {
-            log.info("[findAll]-Finding all tasks with completed false");
-            log.debug("[findAll]-Finding all tasks with completed false {}", filter.getCompleted());
+        if (filter.getCompleted() != null) {
+            log.info("[findAll]-Finding all tasks with completed {}", filter.getCompleted());
             spec = spec.and((root, query, criteriaBuilder) ->
-                    criteriaBuilder.isFalse(root.get("completed")));
-        }
-
-        if (filter.getCompleted() != null && filter.getCompleted()) {
-            log.info("[findAll]-Finding all tasks with completed true");
-            log.debug("[findAll]-Finding all tasks with completed true {}", filter.getCompleted());
-            spec = spec.and((root, query, criteriaBuilder) ->
-                    criteriaBuilder.isTrue(root.get("completed")));
+                    criteriaBuilder.equal(root.get("completed"), filter.getCompleted()));
         }
 
         List<Task> tasks = taskRepository.findAll(spec);
