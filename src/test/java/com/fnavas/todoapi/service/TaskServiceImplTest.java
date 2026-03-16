@@ -75,7 +75,7 @@ class TaskServiceImplTest {
     void findAll_returnsTasks() {
         TaskFilter taskFilter = new TaskFilter();
         List<Task> mockTasks = List.of(sampleTask(), sampleTask());
-        Task  mockTask = sampleTask();
+        Task mockTask = sampleTask();
         TaskDto mockTaskDto = sampleTaskDto();
         Mockito.when(taskRepository.findAll(any(Specification.class))).thenReturn(mockTasks);
         Mockito.when(taskMapper.toDto(mockTask)).thenReturn(mockTaskDto);
@@ -92,7 +92,7 @@ class TaskServiceImplTest {
         TaskFilter taskFilter = new TaskFilter();
         taskFilter.setTitle("title");
         List<Task> mockTasks = List.of(sampleTask(), sampleTask());
-        Task  mockTask = sampleTask();
+        Task mockTask = sampleTask();
         TaskDto mockTaskDto = sampleTaskDto();
         Mockito.when(taskRepository.findAll(any(Specification.class))).thenReturn(mockTasks);
         Mockito.when(taskMapper.toDto(mockTask)).thenReturn(mockTaskDto);
@@ -110,7 +110,7 @@ class TaskServiceImplTest {
         taskFilter.setTitle(" ");
         taskFilter.setDescription(" ");
         List<Task> mockTasks = List.of(sampleTask(), sampleTask());
-        Task  mockTask = sampleTask();
+        Task mockTask = sampleTask();
         TaskDto mockTaskDto = sampleTaskDto();
         Mockito.when(taskRepository.findAll(any(Specification.class))).thenReturn(mockTasks);
         Mockito.when(taskMapper.toDto(mockTask)).thenReturn(mockTaskDto);
@@ -127,7 +127,7 @@ class TaskServiceImplTest {
         TaskFilter taskFilter = new TaskFilter();
         taskFilter.setDescription("description");
         List<Task> mockTasks = List.of(sampleTask(), sampleTask());
-        Task  mockTask = sampleTask();
+        Task mockTask = sampleTask();
         TaskDto mockTaskDto = sampleTaskDto();
         Mockito.when(taskRepository.findAll(any(Specification.class))).thenReturn(mockTasks);
         Mockito.when(taskMapper.toDto(mockTask)).thenReturn(mockTaskDto);
@@ -145,7 +145,7 @@ class TaskServiceImplTest {
         taskFilter.setTitle("title");
         taskFilter.setDescription("description");
         List<Task> mockTasks = List.of(sampleTask(), sampleTask());
-        Task  mockTask = sampleTask();
+        Task mockTask = sampleTask();
         TaskDto mockTaskDto = sampleTaskDto();
         Mockito.when(taskRepository.findAll(any(Specification.class))).thenReturn(mockTasks);
         Mockito.when(taskMapper.toDto(mockTask)).thenReturn(mockTaskDto);
@@ -198,8 +198,7 @@ class TaskServiceImplTest {
 
         TaskNotFoundException exception = assertThrows(
                 TaskNotFoundException.class,
-                () -> taskServiceImpl.updateTaskById(id, mockTaskDto)
-        );
+                () -> taskServiceImpl.updateTaskById(id, mockTaskDto));
 
         assertEquals("Task with id " + id + " not found", exception.getMessage());
         Mockito.verify(taskRepository, Mockito.times(1)).findById(id);

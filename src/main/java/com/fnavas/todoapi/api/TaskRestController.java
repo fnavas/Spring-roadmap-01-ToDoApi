@@ -19,6 +19,7 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 @RequestMapping(value = "api/v1", produces = "application/json")
+@CrossOrigin(origins = "*")
 @Tag(name = "Task Management", description = "APIs for managing tasks")
 public class TaskRestController implements ApiTaskController {
 
