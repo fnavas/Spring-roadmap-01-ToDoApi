@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Slf4j
 public class GlobalExceptionHandler {
     @ExceptionHandler(TaskNotFoundException.class)
-    public ResponseEntity<ErrorResponse> TaskNotFoundHandleException(TaskNotFoundException e) {
+    public ResponseEntity<ErrorResponse> handleTaskNotFoundException(TaskNotFoundException e) {
         log.warn("[TaskNotFoundHandleException]- {}", e.getMessage());
         ErrorResponse errorResponse = new ErrorResponse(
                 404,
@@ -22,7 +22,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponse> MethodArgumentNotValidHandleException(MethodArgumentNotValidException e) {
+    public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         log.warn("[MethodArgumentNotValidHandleException]- {}", e.getMessage());
         String errorMessage = e.getBindingResult().getFieldErrors().stream()
                 .map(error -> error.getField() + ": " + error.getDefaultMessage())
@@ -37,7 +37,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> ExceptionHandleException(Exception e) {
+    public ResponseEntity<ErrorResponse> handleException(Exception e) {
         log.warn("[ExceptionHandleException]- {}", e.getMessage());
         ErrorResponse errorResponse =  new ErrorResponse(
                 500,
