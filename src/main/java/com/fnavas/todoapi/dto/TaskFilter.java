@@ -15,4 +15,12 @@ public class TaskFilter {
             example = "true", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private Boolean completed;
 
+    @Schema(description = "Page number (0-based).", example = "0", defaultValue = "0", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    private int page = 0;
+    @Schema(description = "Number of tasks per page.", example = "10", defaultValue = "10", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    private int size = 10;
+    @Schema(description = "Field to sort by: id, title, created, completed.", example = "created", defaultValue = "id", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    private String sortBy = "id";
+    @Schema(description = "Sort direction: asc or desc.", example = "asc", defaultValue = "asc", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    private String sortDir = "asc";
 }

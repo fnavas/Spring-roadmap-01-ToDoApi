@@ -9,17 +9,16 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import com.fnavas.todoapi.exception.ErrorResponse;
 
-import java.util.List;
-
 public interface ApiTaskController {
-    @Operation(summary = "List Tasks with dynamic filter", description = "Retrieve a list of all tasks with optional filtering by title")
+    @Operation(summary = "List Tasks with dynamic filter", description = "Retrieve a paginated list of tasks with optional filtering by title, description and completion status")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved list of tasks"),
     })
-    ResponseEntity<List<TaskDto>> getAllTasks(TaskFilter filter);
+    ResponseEntity<Page<TaskDto>> getAllTasks(TaskFilter filter);
 
     @Operation(summary = "Get Task by ID", description = "Retrieve a task by its ID")
     @ApiResponses(value = {

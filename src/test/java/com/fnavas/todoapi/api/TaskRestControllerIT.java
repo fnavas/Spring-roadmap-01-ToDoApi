@@ -43,8 +43,9 @@ public class TaskRestControllerIT {
         mockMvc.perform(get("/api/v1/tasks")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$").isArray())
-                .andExpect(jsonPath("$.length()").value(0));
+                .andExpect(jsonPath("$.content").isArray())
+                .andExpect(jsonPath("$.content.length()").value(0))
+                .andExpect(jsonPath("$.totalElements").value(0));
     }
 
     @Test
@@ -63,12 +64,13 @@ public class TaskRestControllerIT {
         mockMvc.perform(get("/api/v1/tasks")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$").isArray())
-                .andExpect(jsonPath("$.length()").value(2))
-                .andExpect(jsonPath("$[0].title").value("title1"))
-                .andExpect(jsonPath("$[0].description").value("description1"))
-                .andExpect(jsonPath("$[1].title").value("title2"))
-                .andExpect(jsonPath("$[1].description").value("description2"));
+                .andExpect(jsonPath("$.content").isArray())
+                .andExpect(jsonPath("$.content.length()").value(2))
+                .andExpect(jsonPath("$.totalElements").value(2))
+                .andExpect(jsonPath("$.content[0].title").value("title1"))
+                .andExpect(jsonPath("$.content[0].description").value("description1"))
+                .andExpect(jsonPath("$.content[1].title").value("title2"))
+                .andExpect(jsonPath("$.content[1].description").value("description2"));
     }
 
     @Test
@@ -109,8 +111,8 @@ public class TaskRestControllerIT {
                 .param("title", "TITLE")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$").isArray())
-                .andExpect(jsonPath("$.length()").value(2));
+                .andExpect(jsonPath("$.content").isArray())
+                .andExpect(jsonPath("$.content.length()").value(2));
     }
 
     @Test
@@ -130,8 +132,8 @@ public class TaskRestControllerIT {
                 .param("title", "NONEXISTENT")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$").isArray())
-                .andExpect(jsonPath("$.length()").value(0));
+                .andExpect(jsonPath("$.content").isArray())
+                .andExpect(jsonPath("$.content.length()").value(0));
     }
 
     @Test
@@ -151,8 +153,8 @@ public class TaskRestControllerIT {
                 .param("description", "DESCRIPTION")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$").isArray())
-                .andExpect(jsonPath("$.length()").value(2));
+                .andExpect(jsonPath("$.content").isArray())
+                .andExpect(jsonPath("$.content.length()").value(2));
     }
 
     @Test
@@ -172,8 +174,8 @@ public class TaskRestControllerIT {
                 .param("description", "NONEXISTENT")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$").isArray())
-                .andExpect(jsonPath("$.length()").value(0));
+                .andExpect(jsonPath("$.content").isArray())
+                .andExpect(jsonPath("$.content.length()").value(0));
     }
 
     @Test
@@ -219,5 +221,64 @@ public class TaskRestControllerIT {
         mockMvc.perform(delete("/api/v1/tasks/{id}", 999L)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void getAllTasks_withPagination_shouldReturnFirstPage() throws Exception {
+        for (int i = 1; i <= 5; i++) {
+            Task task = new Task();
+            task.setTitle("task" + i);
+            taskRepository.save(task);
+        }
+
+        mockMvc.perform(get("/api/v1/tasks")
+                .param("page", "0")
+                .param("size", "3")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content.length()").value(3))
+                .andExpect(jsonPath("$.totalElements").value(5))
+                .andExpect(jsonPath("$.totalPages").value(2))
+                .andExpect(jsonPath("$.number").value(0));
+    }
+
+    @Test
+    void getAllTasks_withPagination_shouldReturnSecondPage() throws Exception {
+        for (int i = 1; i <= 5; i++) {
+            Task task = new Task();
+            task.setTitle("task" + i);
+            taskRepository.save(task);
+        }
+
+        mockMvc.perform(get("/api/v1/tasks")
+                .param("page", "1")
+                .param("size", "3")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content.length()").value(2))
+                .andExpect(jsonPath("$.totalElements").value(5))
+                .andExpect(jsonPath("$.number").value(1));
+    }
+
+    @Test
+    void getAllTasks_sortedByTitleDesc_shouldReturnTasksInDescOrder() throws Exception {
+        Task taskA = new Task();
+        taskA.setTitle("Alpha");
+        Task taskB = new Task();
+        taskB.setTitle("Beta");
+        Task taskC = new Task();
+        taskC.setTitle("Gamma");
+        taskRepository.save(taskA);
+        taskRepository.save(taskB);
+        taskRepository.save(taskC);
+
+        mockMvc.perform(get("/api/v1/tasks")
+                .param("sortBy", "title")
+                .param("sortDir", "desc")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content[0].title").value("Gamma"))
+                .andExpect(jsonPath("$.content[1].title").value("Beta"))
+                .andExpect(jsonPath("$.content[2].title").value("Alpha"));
     }
 }

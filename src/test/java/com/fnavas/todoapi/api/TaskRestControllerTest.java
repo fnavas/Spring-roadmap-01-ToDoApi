@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -39,15 +40,16 @@ class TaskRestControllerTest {
     @Test
     void getAllTasks_shouldReturnTaskList() throws Exception {
         List<TaskDto> taskDtos  = List.of(sampleTaskDto(), sampleTaskDto());
-        Mockito.when(taskService.findAll(any(TaskFilter.class))).thenReturn(taskDtos);
+        Mockito.when(taskService.findAll(any(TaskFilter.class))).thenReturn(new PageImpl<>(taskDtos));
 
         mockMvc.perform(get("/api/v1/tasks"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.size()").value(2))
-                .andExpect(jsonPath("$[0].id").value(1))
-                .andExpect(jsonPath("$[0].title").value("title"))
-                .andExpect(jsonPath("$[0].description").value("description"));
+                .andExpect(jsonPath("$.content.length()").value(2))
+                .andExpect(jsonPath("$.content[0].id").value(1))
+                .andExpect(jsonPath("$.content[0].title").value("title"))
+                .andExpect(jsonPath("$.content[0].description").value("description"))
+                .andExpect(jsonPath("$.totalElements").value(2));
 
         Mockito.verify(taskService, Mockito.times(1)).findAll(any(TaskFilter.class));
     }
@@ -71,15 +73,15 @@ class TaskRestControllerTest {
     @Test
     void getCompletedTasks_shouldReturnCompletedTasks() throws Exception {
         List<TaskDto> completedTasks = List.of(sampleTaskDto(), sampleTaskDto());
-        Mockito.when(taskService.findAll(any(TaskFilter.class))).thenReturn(completedTasks);
+        Mockito.when(taskService.findAll(any(TaskFilter.class))).thenReturn(new PageImpl<>(completedTasks));
 
         mockMvc.perform(get("/api/v1/tasks?completed=true"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.size()").value(2))
-                .andExpect(jsonPath("$[0].id").value(1))
-                .andExpect(jsonPath("$[0].title").value("title"))
-                .andExpect(jsonPath("$[0].description").value("description"));
+                .andExpect(jsonPath("$.content.length()").value(2))
+                .andExpect(jsonPath("$.content[0].id").value(1))
+                .andExpect(jsonPath("$.content[0].title").value("title"))
+                .andExpect(jsonPath("$.content[0].description").value("description"));
 
         Mockito.verify(taskService, Mockito.times(1)).findAll(any(TaskFilter.class));
     }
@@ -87,15 +89,15 @@ class TaskRestControllerTest {
     @Test
     void getPendingTasks_shouldReturnPendingTasks() throws Exception {
         List<TaskDto> pendingTasks = List.of(sampleTaskDto(), sampleTaskDto());
-        Mockito.when(taskService.findAll(any(TaskFilter.class))).thenReturn(pendingTasks);
+        Mockito.when(taskService.findAll(any(TaskFilter.class))).thenReturn(new PageImpl<>(pendingTasks));
 
         mockMvc.perform(get("/api/v1/tasks?completed=false"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.size()").value(2))
-                .andExpect(jsonPath("$[0].id").value(1))
-                .andExpect(jsonPath("$[0].title").value("title"))
-                .andExpect(jsonPath("$[0].description").value("description"));
+                .andExpect(jsonPath("$.content.length()").value(2))
+                .andExpect(jsonPath("$.content[0].id").value(1))
+                .andExpect(jsonPath("$.content[0].title").value("title"))
+                .andExpect(jsonPath("$.content[0].description").value("description"));
 
         Mockito.verify(taskService, Mockito.times(1)).findAll(any(TaskFilter.class));
     }
@@ -104,15 +106,15 @@ class TaskRestControllerTest {
     void getTasksByTitle_shouldReturnTasksByTitle() throws Exception {
         String title = "title";
         List<TaskDto> taskDtos = List.of(sampleTaskDto(), sampleTaskDto());
-        Mockito.when(taskService.findAll(any(TaskFilter.class))).thenReturn(taskDtos);
+        Mockito.when(taskService.findAll(any(TaskFilter.class))).thenReturn(new PageImpl<>(taskDtos));
 
         mockMvc.perform(get("/api/v1/tasks?title={title}", title))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.size()").value(2))
-                .andExpect(jsonPath("$[0].id").value(1))
-                .andExpect(jsonPath("$[0].title").value("title"))
-                .andExpect(jsonPath("$[0].description").value("description"));
+                .andExpect(jsonPath("$.content.length()").value(2))
+                .andExpect(jsonPath("$.content[0].id").value(1))
+                .andExpect(jsonPath("$.content[0].title").value("title"))
+                .andExpect(jsonPath("$.content[0].description").value("description"));
 
         Mockito.verify(taskService, Mockito.times(1)).findAll(any(TaskFilter.class));
     }
@@ -121,15 +123,15 @@ class TaskRestControllerTest {
     void getTasksByDescription_shouldReturnTasksByDescription() throws Exception {
         String description = "description";
         List<TaskDto> taskDtos = List.of(sampleTaskDto(), sampleTaskDto());
-        Mockito.when(taskService.findAll(any(TaskFilter.class))).thenReturn(taskDtos);
+        Mockito.when(taskService.findAll(any(TaskFilter.class))).thenReturn(new PageImpl<>(taskDtos));
 
         mockMvc.perform(get("/api/v1/tasks?description={description}", description))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.size()").value(2))
-                .andExpect(jsonPath("$[0].id").value(1))
-                .andExpect(jsonPath("$[0].title").value("title"))
-                .andExpect(jsonPath("$[0].description").value("description"));
+                .andExpect(jsonPath("$.content.length()").value(2))
+                .andExpect(jsonPath("$.content[0].id").value(1))
+                .andExpect(jsonPath("$.content[0].title").value("title"))
+                .andExpect(jsonPath("$.content[0].description").value("description"));
 
         Mockito.verify(taskService, Mockito.times(1)).findAll(any(TaskFilter.class));
     }

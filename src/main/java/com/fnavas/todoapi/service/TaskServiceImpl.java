@@ -8,10 +8,12 @@ import com.fnavas.todoapi.mapper.TaskMapper;
 import com.fnavas.todoapi.repository.TaskRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @Slf4j
@@ -31,7 +33,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public List<TaskDto> findAll(TaskFilter filter) {
+    public Page<TaskDto> findAll(TaskFilter filter) {
         log.info("[findAll]-Finding all tasks");
         Specification<Task> spec = Specification.where((root, query, cb) -> cb.conjunction());
         if (filter.getTitle() != null && !filter.getTitle().isBlank()) {
@@ -54,10 +56,12 @@ public class TaskServiceImpl implements TaskService {
                     criteriaBuilder.equal(root.get("completed"), filter.getCompleted()));
         }
 
-        List<Task> tasks = taskRepository.findAll(spec);
-        return tasks.stream()
-                .map(taskMapper::toDto)
-                .toList();
+        Sort sort = filter.getSortDir().equalsIgnoreCase("desc")
+                ? Sort.by(filter.getSortBy()).descending()
+                : Sort.by(filter.getSortBy()).ascending();
+        Pageable pageable = PageRequest.of(filter.getPage(), filter.getSize(), sort);
+
+        return taskRepository.findAll(spec, pageable).map(taskMapper::toDto);
     }
 
     @Override

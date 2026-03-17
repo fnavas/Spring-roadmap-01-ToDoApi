@@ -12,6 +12,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.List;
@@ -77,14 +80,14 @@ class TaskServiceImplTest {
         List<Task> mockTasks = List.of(sampleTask(), sampleTask());
         Task mockTask = sampleTask();
         TaskDto mockTaskDto = sampleTaskDto();
-        Mockito.when(taskRepository.findAll(any(Specification.class))).thenReturn(mockTasks);
+        Mockito.when(taskRepository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(new PageImpl<>(mockTasks));
         Mockito.when(taskMapper.toDto(mockTask)).thenReturn(mockTaskDto);
 
-        List<TaskDto> taskDtos = taskServiceImpl.findAll(taskFilter);
+        Page<TaskDto> taskDtos = taskServiceImpl.findAll(taskFilter);
 
         assertNotNull(taskDtos);
-        assertEquals(taskDtos.size(), mockTasks.size());
-        Mockito.verify(taskRepository, Mockito.times(1)).findAll(any(Specification.class));
+        assertEquals(taskDtos.getTotalElements(), mockTasks.size());
+        Mockito.verify(taskRepository, Mockito.times(1)).findAll(any(Specification.class), any(Pageable.class));
     }
 
     @Test
@@ -94,14 +97,14 @@ class TaskServiceImplTest {
         List<Task> mockTasks = List.of(sampleTask(), sampleTask());
         Task mockTask = sampleTask();
         TaskDto mockTaskDto = sampleTaskDto();
-        Mockito.when(taskRepository.findAll(any(Specification.class))).thenReturn(mockTasks);
+        Mockito.when(taskRepository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(new PageImpl<>(mockTasks));
         Mockito.when(taskMapper.toDto(mockTask)).thenReturn(mockTaskDto);
 
-        List<TaskDto> taskDtos = taskServiceImpl.findAll(taskFilter);
+        Page<TaskDto> taskDtos = taskServiceImpl.findAll(taskFilter);
 
         assertNotNull(taskDtos);
-        assertEquals(taskDtos.size(), mockTasks.size());
-        Mockito.verify(taskRepository, Mockito.times(1)).findAll(any(Specification.class));
+        assertEquals(taskDtos.getTotalElements(), mockTasks.size());
+        Mockito.verify(taskRepository, Mockito.times(1)).findAll(any(Specification.class), any(Pageable.class));
     }
 
     @Test
@@ -112,14 +115,14 @@ class TaskServiceImplTest {
         List<Task> mockTasks = List.of(sampleTask(), sampleTask());
         Task mockTask = sampleTask();
         TaskDto mockTaskDto = sampleTaskDto();
-        Mockito.when(taskRepository.findAll(any(Specification.class))).thenReturn(mockTasks);
+        Mockito.when(taskRepository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(new PageImpl<>(mockTasks));
         Mockito.when(taskMapper.toDto(mockTask)).thenReturn(mockTaskDto);
 
-        List<TaskDto> taskDtos = taskServiceImpl.findAll(taskFilter);
+        Page<TaskDto> taskDtos = taskServiceImpl.findAll(taskFilter);
 
         assertNotNull(taskDtos);
-        assertEquals(taskDtos.size(), mockTasks.size());
-        Mockito.verify(taskRepository, Mockito.times(1)).findAll(any(Specification.class));
+        assertEquals(taskDtos.getTotalElements(), mockTasks.size());
+        Mockito.verify(taskRepository, Mockito.times(1)).findAll(any(Specification.class), any(Pageable.class));
     }
 
     @Test
@@ -129,14 +132,14 @@ class TaskServiceImplTest {
         List<Task> mockTasks = List.of(sampleTask(), sampleTask());
         Task mockTask = sampleTask();
         TaskDto mockTaskDto = sampleTaskDto();
-        Mockito.when(taskRepository.findAll(any(Specification.class))).thenReturn(mockTasks);
+        Mockito.when(taskRepository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(new PageImpl<>(mockTasks));
         Mockito.when(taskMapper.toDto(mockTask)).thenReturn(mockTaskDto);
 
-        List<TaskDto> taskDtos = taskServiceImpl.findAll(taskFilter);
+        Page<TaskDto> taskDtos = taskServiceImpl.findAll(taskFilter);
 
         assertNotNull(taskDtos);
-        assertEquals(taskDtos.size(), mockTasks.size());
-        Mockito.verify(taskRepository, Mockito.times(1)).findAll(any(Specification.class));
+        assertEquals(taskDtos.getTotalElements(), mockTasks.size());
+        Mockito.verify(taskRepository, Mockito.times(1)).findAll(any(Specification.class), any(Pageable.class));
     }
 
     @Test
@@ -147,14 +150,14 @@ class TaskServiceImplTest {
         List<Task> mockTasks = List.of(sampleTask(), sampleTask());
         Task mockTask = sampleTask();
         TaskDto mockTaskDto = sampleTaskDto();
-        Mockito.when(taskRepository.findAll(any(Specification.class))).thenReturn(mockTasks);
+        Mockito.when(taskRepository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(new PageImpl<>(mockTasks));
         Mockito.when(taskMapper.toDto(mockTask)).thenReturn(mockTaskDto);
 
-        List<TaskDto> taskDtos = taskServiceImpl.findAll(taskFilter);
+        Page<TaskDto> taskDtos = taskServiceImpl.findAll(taskFilter);
 
         assertNotNull(taskDtos);
-        assertEquals(taskDtos.size(), mockTasks.size());
-        Mockito.verify(taskRepository, Mockito.times(1)).findAll(any(Specification.class));
+        assertEquals(taskDtos.getTotalElements(), mockTasks.size());
+        Mockito.verify(taskRepository, Mockito.times(1)).findAll(any(Specification.class), any(Pageable.class));
     }
 
     @Test

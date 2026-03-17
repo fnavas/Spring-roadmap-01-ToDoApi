@@ -8,12 +8,12 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.util.List;
 
 @RestController
 @Slf4j
@@ -27,11 +27,11 @@ public class TaskRestController implements ApiTaskController {
 
     @Override
     @GetMapping("/tasks")
-    public ResponseEntity<List<TaskDto>> getAllTasks(
+    public ResponseEntity<Page<TaskDto>> getAllTasks(
             @ParameterObject TaskFilter taskFilter
     ) {
         log.info("[getAllTasks]-Getting all tasks");
-        List<TaskDto> taskDtos = taskService.findAll(taskFilter);
+        Page<TaskDto> taskDtos = taskService.findAll(taskFilter);
         return ResponseEntity.ok(taskDtos);
     }
 
