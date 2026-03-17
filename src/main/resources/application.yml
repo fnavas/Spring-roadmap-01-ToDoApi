@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: ToDoApi
+  profiles:
+    active: dev
+
+server:
+  port: 8080
