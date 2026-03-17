@@ -17,6 +17,10 @@ public class Task {
     private String description;
     @Column(nullable = false)
     private Boolean completed = Boolean.FALSE;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Priority priority = Priority.MEDIUM;
+    private LocalDate dueDate;
     @CreationTimestamp
     @Column(updatable = false)
     private LocalDate created;

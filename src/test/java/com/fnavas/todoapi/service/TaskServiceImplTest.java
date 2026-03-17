@@ -43,7 +43,7 @@ class TaskServiceImplTest {
     }
 
     private TaskDto sampleTaskDto() {
-        return new TaskDto(1L, "title", "description", null, null);
+        return new TaskDto(1L, "title", "description", null, null, null, null);
     }
 
     @Test

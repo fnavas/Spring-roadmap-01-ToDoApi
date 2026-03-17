@@ -180,7 +180,7 @@ public class TaskRestControllerIT {
 
     @Test
     void createTask_shouldCreateTask() throws Exception{
-        TaskDto taskDto = new TaskDto(null, "title", "description", null, null);
+        TaskDto taskDto = new TaskDto(null, "title", "description", null, null, null, null);
 
         mockMvc.perform(post("/api/v1/tasks")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -194,7 +194,7 @@ public class TaskRestControllerIT {
 
     @Test
     void createTask_shouldReturnBadRequest_whenTitleIsNull() throws Exception {
-        TaskDto taskDto = new TaskDto(null, null, "description", null, null);
+        TaskDto taskDto = new TaskDto(null, null, "description", null, null, null, null);
 
         mockMvc.perform(post("/api/v1/tasks")
                         .contentType(MediaType.APPLICATION_JSON)

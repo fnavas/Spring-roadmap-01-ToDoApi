@@ -68,7 +68,7 @@ class TaskMapperTest {
 
     @Test
     void toEntity_mapsAllFields() {
-        TaskDto dto = new TaskDto(10L, "Write tests", "Cover mapper layer", true, LocalDate.now());
+        TaskDto dto = new TaskDto(10L, "Write tests", "Cover mapper layer", true, null, null, LocalDate.now());
 
         Task task = taskMapper.toEntity(dto);
 
@@ -80,7 +80,7 @@ class TaskMapperTest {
 
     @Test
     void toEntity_withNullCompleted_defaultsToFalse() {
-        TaskDto dto = new TaskDto(null, "No completed field", null, null, null);
+        TaskDto dto = new TaskDto(null, "No completed field", null, null, null, null, null);
 
         Task task = taskMapper.toEntity(dto);
 
@@ -89,7 +89,7 @@ class TaskMapperTest {
 
     @Test
     void toEntity_withNullDescription_mapsToNull() {
-        TaskDto dto = new TaskDto(null, "No description", null, false, null);
+        TaskDto dto = new TaskDto(null, "No description", null, false, null, null, null);
 
         Task task = taskMapper.toEntity(dto);
 

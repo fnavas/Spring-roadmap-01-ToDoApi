@@ -1,5 +1,6 @@
 package com.fnavas.todoapi.dto;
 
+import com.fnavas.todoapi.entity.Priority;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -14,6 +15,9 @@ public class TaskFilter {
     @Schema(description = "Filter tasks by completion status. This will return tasks that are either completed or pending based on the specified value.",
             example = "true", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private Boolean completed;
+    @Schema(description = "Filter tasks by priority level: LOW, MEDIUM or HIGH.",
+            example = "HIGH", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    private Priority priority;
 
     @Schema(description = "Page number (0-based).", example = "0", defaultValue = "0", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private int page = 0;

@@ -34,7 +34,7 @@ class TaskRestControllerTest {
 
 
     private TaskDto sampleTaskDto() {
-        return new TaskDto(1L, "title", "description", null, null);
+        return new TaskDto(1L, "title", "description", null, null, null, null);
     }
 
     @Test
@@ -139,7 +139,7 @@ class TaskRestControllerTest {
     @Test
     void createTask_shouldCreateTask() throws Exception {
         TaskDto request = sampleTaskDto();
-        TaskDto response = new TaskDto(null, null, null, null, null);
+        TaskDto response = new TaskDto(null, null, null, null, null, null, null);
         Mockito.when(taskService.createTask(any(TaskDto.class))).thenReturn(response);
 
         mockMvc.perform(post("/api/v1/tasks")
@@ -152,7 +152,7 @@ class TaskRestControllerTest {
 
     @Test
     void createTask_withInvalidData_shouldReturnBadRequest() throws Exception {
-        TaskDto request = new TaskDto(null, null,"description", null, null);
+        TaskDto request = new TaskDto(null, null, "description", null, null, null, null);
 
         mockMvc.perform(post("/api/v1/tasks")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -165,9 +165,9 @@ class TaskRestControllerTest {
     @Test
     void updateTask_shouldUpdateTask() throws Exception {
         Long id = 1L;
-        TaskDto request = new TaskDto(null, "title", "description", null, null);
+        TaskDto request = new TaskDto(null, "title", "description", null, null, null, null);
 
-        TaskDto response = new TaskDto(null, null, null, null, null);
+        TaskDto response = new TaskDto(null, null, null, null, null, null, null);
         Mockito.when(taskService.updateTaskById(eq(id), any(TaskDto.class)))
                 .thenReturn(response);
 
@@ -182,7 +182,7 @@ class TaskRestControllerTest {
     @Test
     void updateTask_withInvalidData_shouldReturnBadRequest() throws Exception {
         Long id = 1L;
-        TaskDto request = new TaskDto(null, null,"description", null, null);
+        TaskDto request = new TaskDto(null, null, "description", null, null, null, null);
 
         mockMvc.perform(put("/api/v1/tasks/{id}", id)
                         .contentType(MediaType.APPLICATION_JSON)

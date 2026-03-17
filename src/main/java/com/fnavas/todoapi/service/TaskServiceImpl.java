@@ -56,6 +56,12 @@ public class TaskServiceImpl implements TaskService {
                     criteriaBuilder.equal(root.get("completed"), filter.getCompleted()));
         }
 
+        if (filter.getPriority() != null) {
+            log.info("[findAll]-Finding all tasks with priority {}", filter.getPriority());
+            spec = spec.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.equal(root.get("priority"), filter.getPriority()));
+        }
+
         Sort sort = filter.getSortDir().equalsIgnoreCase("desc")
                 ? Sort.by(filter.getSortBy()).descending()
                 : Sort.by(filter.getSortBy()).ascending();
@@ -78,9 +84,11 @@ public class TaskServiceImpl implements TaskService {
         log.debug("[updateTaskById]-Finding task by id {}", id);
         Task task = taskRepository.findById(id).orElseThrow(
                 () -> new TaskNotFoundException("Task with id " + id + " not found"));
+        task.setTitle(taskDto.title());
         task.setDescription(taskDto.description());
         task.setCompleted(taskDto.completed());
-        task.setTitle(taskDto.title());
+        task.setPriority(taskDto.priority() != null ? taskDto.priority() : task.getPriority());
+        task.setDueDate(taskDto.dueDate());
         log.info("[updateTaskById]-Updating task by id");
         log.debug("[updateTaskById]-Updating task by id {}", id);
         return taskMapper.toDto(taskRepository.save(task));
