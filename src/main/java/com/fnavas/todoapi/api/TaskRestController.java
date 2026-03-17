@@ -5,11 +5,13 @@ import com.fnavas.todoapi.dto.TaskFilter;
 import com.fnavas.todoapi.service.TaskService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -17,6 +19,7 @@ import java.net.URI;
 
 @RestController
 @Slf4j
+@Validated
 @RequiredArgsConstructor
 @RequestMapping(value = "api/v1", produces = "application/json")
 @CrossOrigin(origins = "*")
@@ -37,7 +40,7 @@ public class TaskRestController implements ApiTaskController {
 
     @Override
     @GetMapping("/tasks/{id}")
-    public ResponseEntity<TaskDto> getTaskById(@PathVariable Long id) {
+    public ResponseEntity<TaskDto> getTaskById(@PathVariable @Positive Long id) {
         log.info("[getTaskById]-Getting task by id");
         log.debug("[getTaskById]-Getting task by id {}", id);
         TaskDto taskDto = taskService.findById(id);
@@ -60,7 +63,7 @@ public class TaskRestController implements ApiTaskController {
 
     @Override
     @PutMapping("/tasks/{id}")
-    public ResponseEntity<TaskDto> updateTask(@PathVariable Long id, @Valid @RequestBody TaskDto taskDto) {
+    public ResponseEntity<TaskDto> updateTask(@PathVariable @Positive Long id, @Valid @RequestBody TaskDto taskDto) {
         log.info("[updateTask]-Updating task");
         log.debug("[updateTask]-Updating task {}", taskDto);
         TaskDto updatedTaskDto = taskService.updateTaskById(id, taskDto);
@@ -69,7 +72,7 @@ public class TaskRestController implements ApiTaskController {
 
     @Override
     @DeleteMapping("/tasks/{id}")
-    public ResponseEntity deleteTask(@PathVariable Long id) {
+    public ResponseEntity deleteTask(@PathVariable @Positive Long id) {
         log.info("[deleteTask]-Deleting task by id");
         log.debug("[deleteTask]-Deleting task by id {}", id);
         taskService.deleteTaskById(id);

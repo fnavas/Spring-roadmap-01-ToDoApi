@@ -1,5 +1,6 @@
 package com.fnavas.todoapi.exception;
 
+import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +27,21 @@ public class GlobalExceptionHandler {
         log.warn("[MethodArgumentNotValidHandleException]- {}", e.getMessage());
         String errorMessage = e.getBindingResult().getFieldErrors().stream()
                 .map(error -> error.getField() + ": " + error.getDefaultMessage())
+                .findFirst()
+                .orElse(e.getMessage());
+        ErrorResponse errorResponse = new ErrorResponse(
+                400,
+                "Validation Error",
+                errorMessage
+        );
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ErrorResponse> handleConstraintViolationException(ConstraintViolationException e) {
+        log.warn("[ConstraintViolationHandleException]- {}", e.getMessage());
+        String errorMessage = e.getConstraintViolations().stream()
+                .map(v -> v.getPropertyPath() + ": " + v.getMessage())
                 .findFirst()
                 .orElse(e.getMessage());
         ErrorResponse errorResponse = new ErrorResponse(

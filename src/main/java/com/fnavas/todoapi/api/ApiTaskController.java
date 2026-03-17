@@ -9,6 +9,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import com.fnavas.todoapi.exception.ErrorResponse;
@@ -29,7 +31,7 @@ public interface ApiTaskController {
                     content = @Content(schema = @Schema(implementation = ErrorResponse.class))
             )
     })
-    ResponseEntity<TaskDto> getTaskById(Long id);
+    ResponseEntity<TaskDto> getTaskById(@Positive Long id);
 
     @Operation(summary = "Create Task", description = "Create a new task")
     @RequestBody(
@@ -43,7 +45,7 @@ public interface ApiTaskController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Successfully created the task")
     })
-    ResponseEntity<TaskDto> createTask(TaskDto taskDto);
+    ResponseEntity<TaskDto> createTask(@Valid TaskDto taskDto);
 
     @Operation(summary = "Update Task", description = "Update an existing task by its ID")
     @RequestBody(
@@ -64,7 +66,7 @@ public interface ApiTaskController {
                     content = @Content(schema = @Schema(implementation = ErrorResponse.class))
             )
     })
-    ResponseEntity<TaskDto> updateTask(Long id, TaskDto taskDto);
+    ResponseEntity<TaskDto> updateTask(@Positive Long id, @Valid TaskDto taskDto);
 
     @Operation(summary = "Delete Task", description = "Delete a task by its ID")
     @ApiResponses(value = {
@@ -75,5 +77,5 @@ public interface ApiTaskController {
                     content = @Content(schema = @Schema(implementation = ErrorResponse.class))
             )
     })
-    ResponseEntity deleteTask(Long id);
+    ResponseEntity deleteTask(@Positive Long id);
 }
