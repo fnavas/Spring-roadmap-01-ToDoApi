@@ -6,3 +6,14 @@ spring:
 
 server:
   port: 8080
+
+management:
+  info:
+    env:
+      enabled: true
+
+info:
+  app:
+    name: ${spring.application.name}
+    version: "@project.version@"
+    description: "@project.description@"
