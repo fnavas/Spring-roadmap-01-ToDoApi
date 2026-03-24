@@ -21,7 +21,7 @@ import java.net.URI;
 @Slf4j
 @Validated
 @RequiredArgsConstructor
-@RequestMapping(value = "api/v1", produces = "application/json")
+@RequestMapping(value = "/api/v1", produces = "application/json")
 @CrossOrigin(origins = "*")
 @Tag(name = "Task Management", description = "APIs for managing tasks")
 public class TaskRestController implements ApiTaskController {

@@ -1,11 +1,10 @@
 package com.fnavas.todoapi.exception;
 
 import lombok.Getter;
-import lombok.Setter;
 
 import java.time.LocalDateTime;
 
-@Getter @Setter
+@Getter
 public class ErrorResponse {
     private int statusCode;
     private String message;
