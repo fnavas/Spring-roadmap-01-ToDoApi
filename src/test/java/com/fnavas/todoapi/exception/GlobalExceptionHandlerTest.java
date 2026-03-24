@@ -34,7 +34,7 @@ class GlobalExceptionHandlerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isInternalServerError())
                 .andExpect(jsonPath("$.statusCode").value(500))
-                .andExpect(jsonPath("$.error").value("Database error"))
+                .andExpect(jsonPath("$.error").value("An unexpected error occurred"))
                 .andExpect(jsonPath("$.message").value("Internal Server Error"));
     }
 }
