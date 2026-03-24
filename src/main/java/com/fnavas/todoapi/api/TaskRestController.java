@@ -72,7 +72,7 @@ public class TaskRestController implements ApiTaskController {
 
     @Override
     @DeleteMapping("/tasks/{id}")
-    public ResponseEntity deleteTask(@PathVariable @Positive Long id) {
+    public ResponseEntity<Void> deleteTask(@PathVariable @Positive Long id) {
         log.info("[deleteTask]-Deleting task by id");
         log.debug("[deleteTask]-Deleting task by id {}", id);
         taskService.deleteTaskById(id);

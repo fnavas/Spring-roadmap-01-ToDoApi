@@ -77,5 +77,5 @@ public interface ApiTaskController {
                     content = @Content(schema = @Schema(implementation = ErrorResponse.class))
             )
     })
-    ResponseEntity deleteTask(@Positive Long id);
+    ResponseEntity<Void> deleteTask(@Positive Long id);
 }
