@@ -9,5 +9,6 @@ import org.mapstruct.Mapping;
 public interface TaskMapper {
     TaskDto toDto(Task task);
     @Mapping(target = "completed", defaultValue = "false")
+    @Mapping(target = "priority", defaultValue = "MEDIUM")
     Task toEntity(TaskDto taskDto);
 }
