@@ -1,6 +1,7 @@
 package com.fnavas.todoapi.api;
 
 import com.fnavas.todoapi.dto.TaskDto;
+import com.fnavas.todoapi.entity.Priority;
 import com.fnavas.todoapi.entity.Task;
 import com.fnavas.todoapi.repository.TaskRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,9 +12,13 @@ import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import tools.jackson.databind.ObjectMapper;
+
+import java.time.LocalDate;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -33,10 +38,7 @@ public class TaskRestControllerIT {
         taskRepository.deleteAll();
     }
 
-    @Test
-    void contextLoads() {
-        // This test will simply check if the application context loads successfully.
-    }
+    // ── GET /tasks ─────────────────────────────────────────────────────────────
 
     @Test
     void getAllTasks_shouldReturnEmptyList() throws Exception {
@@ -74,27 +76,6 @@ public class TaskRestControllerIT {
     }
 
     @Test
-    void getTaskById_shouldReturnTask() throws Exception {
-        Task task = new Task();
-        task.setTitle("title");
-        task.setDescription("description");
-        Task savedTask = taskRepository.save(task);
-
-        mockMvc.perform(get("/api/v1/tasks/{id}", savedTask.getId())
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.title").value("title"))
-                .andExpect(jsonPath("$.description").value("description"));
-    }
-
-    @Test
-    void getTaskById_shouldReturnNotFound() throws Exception {
-        mockMvc.perform(get("/api/v1/tasks/{id}", 999L)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound());
-    }
-
-    @Test
     void findByTitleContainingIgnoreCase_shouldReturnTasks() throws Exception {
         Task task1 = new Task();
         task1.setTitle("title1");
@@ -121,12 +102,7 @@ public class TaskRestControllerIT {
         task1.setTitle("title1");
         task1.setDescription("description1");
 
-        Task task2 = new Task();
-        task2.setTitle("title2");
-        task2.setDescription("description2");
-
         taskRepository.save(task1);
-        taskRepository.save(task2);
 
         mockMvc.perform(get("/api/v1/tasks")
                 .param("title", "NONEXISTENT")
@@ -163,12 +139,7 @@ public class TaskRestControllerIT {
         task1.setTitle("title1");
         task1.setDescription("description1");
 
-        Task task2 = new Task();
-        task2.setTitle("title2");
-        task2.setDescription("description2");
-
         taskRepository.save(task1);
-        taskRepository.save(task2);
 
         mockMvc.perform(get("/api/v1/tasks")
                 .param("description", "NONEXISTENT")
@@ -179,49 +150,27 @@ public class TaskRestControllerIT {
     }
 
     @Test
-    void createTask_shouldCreateTask() throws Exception{
-        TaskDto taskDto = new TaskDto(null, "title", "description", null, null, null, null);
+    void findByPriority_shouldReturnFilteredTasks() throws Exception {
+        Task highTask = new Task();
+        highTask.setTitle("High priority task");
+        highTask.setPriority(Priority.HIGH);
 
-        mockMvc.perform(post("/api/v1/tasks")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(taskDto)))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.title").value("title"))
-                .andExpect(jsonPath("$.description").value("description"));
+        Task lowTask = new Task();
+        lowTask.setTitle("Low priority task");
+        lowTask.setPriority(Priority.LOW);
 
-        assert(taskRepository.findAll().size() == 1);
-    }
+        taskRepository.save(highTask);
+        taskRepository.save(lowTask);
 
-    @Test
-    void createTask_shouldReturnBadRequest_whenTitleIsNull() throws Exception {
-        TaskDto taskDto = new TaskDto(null, null, "description", null, null, null, null);
-
-        mockMvc.perform(post("/api/v1/tasks")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(taskDto)))
-                .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    void deleteTaskById_shouldDeleteTask() throws Exception {
-        Task task = new Task();
-        task.setTitle("title");
-        task.setDescription("description");
-        Task savedTask = taskRepository.save(task);
-
-        mockMvc.perform(delete("/api/v1/tasks/{id}", savedTask.getId())
+        mockMvc.perform(get("/api/v1/tasks")
+                .param("priority", "HIGH")
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNoContent());
-
-        assert(taskRepository.findById(savedTask.getId()).isEmpty());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content.length()").value(1))
+                .andExpect(jsonPath("$.content[0].priority").value("HIGH"));
     }
 
-    @Test
-    void deleteTaskById_shouldReturnNotFound() throws Exception {
-        mockMvc.perform(delete("/api/v1/tasks/{id}", 999L)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound());
-    }
+    // ── GET /tasks (pagination & sorting) ─────────────────────────────────────
 
     @Test
     void getAllTasks_withPagination_shouldReturnFirstPage() throws Exception {
@@ -280,5 +229,149 @@ public class TaskRestControllerIT {
                 .andExpect(jsonPath("$.content[0].title").value("Gamma"))
                 .andExpect(jsonPath("$.content[1].title").value("Beta"))
                 .andExpect(jsonPath("$.content[2].title").value("Alpha"));
+    }
+
+    // ── GET /tasks/{id} ────────────────────────────────────────────────────────
+
+    @Test
+    void getTaskById_shouldReturnTask() throws Exception {
+        Task task = new Task();
+        task.setTitle("title");
+        task.setDescription("description");
+        Task savedTask = taskRepository.save(task);
+
+        mockMvc.perform(get("/api/v1/tasks/{id}", savedTask.getId())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.title").value("title"))
+                .andExpect(jsonPath("$.description").value("description"));
+    }
+
+    @Test
+    void getTaskById_shouldReturnNotFound() throws Exception {
+        mockMvc.perform(get("/api/v1/tasks/{id}", 999L)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.statusCode").value(404));
+    }
+
+    @Test
+    void getTaskById_withInvalidId_shouldReturnBadRequest() throws Exception {
+        mockMvc.perform(get("/api/v1/tasks/{id}", 0L)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    // ── POST /tasks ────────────────────────────────────────────────────────────
+
+    @Test
+    void createTask_shouldCreateTask() throws Exception {
+        TaskDto taskDto = new TaskDto(null, "title", "description", null, null, null, null);
+
+        mockMvc.perform(post("/api/v1/tasks")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(taskDto)))
+                .andExpect(status().isCreated())
+                .andExpect(header().exists("Location"))
+                .andExpect(jsonPath("$.title").value("title"))
+                .andExpect(jsonPath("$.description").value("description"))
+                .andExpect(jsonPath("$.completed").value(false))
+                .andExpect(jsonPath("$.priority").value("MEDIUM"));
+
+        assertEquals(1, taskRepository.findAll().size());
+    }
+
+    @Test
+    void createTask_withPriorityAndDueDate_shouldPersistFields() throws Exception {
+        TaskDto taskDto = new TaskDto(null, "urgent task", "desc", null, Priority.HIGH,
+                LocalDate.now().plusDays(7), null);
+
+        mockMvc.perform(post("/api/v1/tasks")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(taskDto)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.priority").value("HIGH"))
+                .andExpect(jsonPath("$.dueDate").exists());
+    }
+
+    @Test
+    void createTask_shouldReturnBadRequest_whenTitleIsNull() throws Exception {
+        TaskDto taskDto = new TaskDto(null, null, "description", null, null, null, null);
+
+        mockMvc.perform(post("/api/v1/tasks")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(taskDto)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.statusCode").value(400));
+    }
+
+    // ── PUT /tasks/{id} ────────────────────────────────────────────────────────
+
+    @Test
+    void updateTask_shouldUpdateTask() throws Exception {
+        Task task = new Task();
+        task.setTitle("original title");
+        task.setDescription("original description");
+        Task savedTask = taskRepository.save(task);
+
+        TaskDto updateDto = new TaskDto(null, "updated title", "updated description", true, Priority.HIGH, null, null);
+
+        mockMvc.perform(put("/api/v1/tasks/{id}", savedTask.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(updateDto)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.title").value("updated title"))
+                .andExpect(jsonPath("$.description").value("updated description"))
+                .andExpect(jsonPath("$.completed").value(true))
+                .andExpect(jsonPath("$.priority").value("HIGH"));
+    }
+
+    @Test
+    void updateTask_shouldReturnNotFound() throws Exception {
+        TaskDto updateDto = new TaskDto(null, "title", "description", false, null, null, null);
+
+        mockMvc.perform(put("/api/v1/tasks/{id}", 999L)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(updateDto)))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.statusCode").value(404));
+    }
+
+    @Test
+    void updateTask_shouldReturnBadRequest_whenTitleIsNull() throws Exception {
+        Task task = new Task();
+        task.setTitle("title");
+        Task savedTask = taskRepository.save(task);
+
+        TaskDto updateDto = new TaskDto(null, null, "description", false, null, null, null);
+
+        mockMvc.perform(put("/api/v1/tasks/{id}", savedTask.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(updateDto)))
+                .andExpect(status().isBadRequest());
+    }
+
+    // ── DELETE /tasks/{id} ─────────────────────────────────────────────────────
+
+    @Test
+    void deleteTaskById_shouldDeleteTask() throws Exception {
+        Task task = new Task();
+        task.setTitle("title");
+        task.setDescription("description");
+        Task savedTask = taskRepository.save(task);
+
+        mockMvc.perform(delete("/api/v1/tasks/{id}", savedTask.getId())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
+
+        assertTrue(taskRepository.findById(savedTask.getId()).isEmpty());
+    }
+
+    @Test
+    void deleteTaskById_shouldReturnNotFound() throws Exception {
+        mockMvc.perform(delete("/api/v1/tasks/{id}", 999L)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.statusCode").value(404));
     }
 }

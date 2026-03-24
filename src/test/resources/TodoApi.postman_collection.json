@@ -230,6 +230,36 @@
           }
         },
         {
+          "name": "GET tasks filtered by priority HIGH",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.test('All results have HIGH priority', () => {",
+                  "    const json = pm.response.json();",
+                  "    json.content.forEach(task => {",
+                  "        pm.expect(task.priority).to.equal('HIGH');",
+                  "    });",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/tasks?priority=HIGH",
+              "host": ["{{baseUrl}}"],
+              "path": ["tasks"],
+              "query": [
+                { "key": "priority", "value": "HIGH" }
+              ]
+            }
+          }
+        },
+        {
           "name": "GET tasks completed=true",
           "event": [
             {
@@ -307,6 +337,7 @@
                   "    pm.expect(json).to.have.property('title');",
                   "    pm.expect(json).to.have.property('description');",
                   "    pm.expect(json).to.have.property('completed');",
+                  "    pm.expect(json).to.have.property('priority');",
                   "    pm.expect(json).to.have.property('created');",
                   "});"
                 ]
@@ -316,9 +347,9 @@
           "request": {
             "method": "GET",
             "url": {
-              "raw": "{{baseUrl}}/tasks/1",
+              "raw": "{{baseUrl}}/tasks/{{taskId}}",
               "host": ["{{baseUrl}}"],
-              "path": ["tasks", "1"]
+              "path": ["tasks", "{{taskId}}"]
             }
           }
         },
@@ -334,6 +365,7 @@
                   "    const json = pm.response.json();",
                   "    pm.expect(json).to.have.property('message');",
                   "    pm.expect(json).to.have.property('statusCode');",
+                  "    pm.expect(json.statusCode).to.equal(404);",
                   "});"
                 ]
               }
@@ -349,6 +381,31 @@
           }
         },
         {
+          "name": "GET task by ID (invalid id - 400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 400', () => pm.response.to.have.status(400));",
+                  "pm.test('Validation error returned', () => {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json.statusCode).to.equal(400);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/tasks/0",
+              "host": ["{{baseUrl}}"],
+              "path": ["tasks", "0"]
+            }
+          }
+        },
+        {
           "name": "POST create task (valid)",
           "event": [
             {
@@ -356,14 +413,17 @@
               "script": {
                 "exec": [
                   "pm.test('Status 201', () => pm.response.to.have.status(201));",
+                  "pm.test('Location header present', () => {",
+                  "    pm.expect(pm.response.headers.get('Location')).to.include('/tasks/');",
+                  "});",
                   "pm.test('Task created with correct data', () => {",
                   "    const json = pm.response.json();",
                   "    pm.expect(json.id).to.be.a('number');",
                   "    pm.expect(json.title).to.equal('New task from Postman');",
                   "    pm.expect(json.description).to.equal('Created to test the API');",
                   "    pm.expect(json.completed).to.be.false;",
+                  "    pm.expect(json.priority).to.equal('MEDIUM');",
                   "});",
-                  "// Guardar el ID para usarlo en PUT y DELETE",
                   "const id = pm.response.json().id;",
                   "pm.collectionVariables.set('taskId', id);",
                   "console.log('Saved taskId:', id);"
@@ -379,6 +439,39 @@
             "body": {
               "mode": "raw",
               "raw": "{\n  \"title\": \"New task from Postman\",\n  \"description\": \"Created to test the API\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/tasks",
+              "host": ["{{baseUrl}}"],
+              "path": ["tasks"]
+            }
+          }
+        },
+        {
+          "name": "POST create task (with priority and dueDate)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 201', () => pm.response.to.have.status(201));",
+                  "pm.test('Priority and dueDate persisted', () => {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json.priority).to.equal('HIGH');",
+                  "    pm.expect(json.dueDate).to.be.a('string');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Urgent task\",\n  \"description\": \"High priority with deadline\",\n  \"priority\": \"HIGH\",\n  \"dueDate\": \"2027-12-31\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/tasks",
@@ -432,6 +525,7 @@
                   "    const json = pm.response.json();",
                   "    pm.expect(json.title).to.equal('Updated from Postman');",
                   "    pm.expect(json.completed).to.be.true;",
+                  "    pm.expect(json.priority).to.equal('HIGH');",
                   "});"
                 ]
               }
@@ -444,7 +538,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"title\": \"Updated from Postman\",\n  \"description\": \"Updated description\",\n  \"completed\": true\n}"
+              "raw": "{\n  \"title\": \"Updated from Postman\",\n  \"description\": \"Updated description\",\n  \"completed\": true,\n  \"priority\": \"HIGH\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/tasks/{{taskId}}",
@@ -511,9 +605,9 @@
               "raw": "{\n  \"description\": \"No title\",\n  \"completed\": false\n}"
             },
             "url": {
-              "raw": "{{baseUrl}}/tasks/1",
+              "raw": "{{baseUrl}}/tasks/{{taskId}}",
               "host": ["{{baseUrl}}"],
-              "path": ["tasks", "1"]
+              "path": ["tasks", "{{taskId}}"]
             }
           }
         },
