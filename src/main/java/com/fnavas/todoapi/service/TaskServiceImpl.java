@@ -86,7 +86,7 @@ public class TaskServiceImpl implements TaskService {
                 () -> new TaskNotFoundException("Task with id " + id + " not found"));
         task.setTitle(taskDto.title());
         task.setDescription(taskDto.description());
-        task.setCompleted(taskDto.completed());
+        task.setCompleted(taskDto.completed() != null ? taskDto.completed() : task.getCompleted());
         task.setPriority(taskDto.priority() != null ? taskDto.priority() : task.getPriority());
         task.setDueDate(taskDto.dueDate());
         log.info("[updateTaskById]-Updating task by id");
