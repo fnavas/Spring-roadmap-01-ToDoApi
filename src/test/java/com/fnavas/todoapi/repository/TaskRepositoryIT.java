@@ -75,9 +75,14 @@ class TaskRepositoryIT {
     }
 
     @Test
-    void findByCompleted_shouldReturnsCompletedTasks() {
-        List<Task> tasksCompleted = taskRepository.findByCompleted(true);
-        List<Task> tasksNotCompleted = taskRepository.findByCompleted(false);
+    void findAll_withCompleted_shouldReturnFilteredTasks() {
+        Specification<Task> completedSpec = Specification.where((root, query, cb) ->
+                cb.equal(root.get("completed"), true));
+        Specification<Task> pendingSpec = Specification.where((root, query, cb) ->
+                cb.equal(root.get("completed"), false));
+
+        List<Task> tasksCompleted = taskRepository.findAll(completedSpec);
+        List<Task> tasksNotCompleted = taskRepository.findAll(pendingSpec);
 
         assertEquals(1, tasksCompleted.size());
         assertEquals("Task Two", tasksCompleted.get(0).getTitle());
