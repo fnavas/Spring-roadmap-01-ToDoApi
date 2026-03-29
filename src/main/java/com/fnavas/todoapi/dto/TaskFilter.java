@@ -2,6 +2,8 @@ package com.fnavas.todoapi.dto;
 
 import com.fnavas.todoapi.entity.Priority;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import lombok.Data;
 
 @Data
@@ -19,8 +21,10 @@ public class TaskFilter {
             example = "HIGH", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private Priority priority;
 
+    @Min(0)
     @Schema(description = "Page number (0-based).", example = "0", defaultValue = "0", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private int page = 0;
+    @Min(1) @Max(100)
     @Schema(description = "Number of tasks per page.", example = "10", defaultValue = "10", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private int size = 10;
     @Schema(description = "Field to sort by: id, title, created, completed.", example = "created", defaultValue = "id", requiredMode = Schema.RequiredMode.NOT_REQUIRED)

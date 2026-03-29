@@ -161,6 +161,15 @@ class TaskServiceImplTest {
     }
 
     @Test
+    void findAll_withInvalidSortBy_shouldThrowIllegalArgument() {
+        TaskFilter taskFilter = new TaskFilter();
+        taskFilter.setSortBy("nonExistentField");
+
+        assertThrows(IllegalArgumentException.class,
+                () -> taskServiceImpl.findAll(taskFilter));
+    }
+
+    @Test
     void createTask() {
         Task mockTask = sampleTask();
         TaskDto mockTaskDto = sampleTaskDto();
@@ -211,25 +220,24 @@ class TaskServiceImplTest {
     @Test
     void deleteTaskById_whenTaskExits_shouldDeleteTask() {
         Long id = 1L;
-        Task mockTask = sampleTask();
-        Mockito.when(taskRepository.findById(id)).thenReturn(Optional.of(mockTask));
+        Mockito.when(taskRepository.existsById(id)).thenReturn(true);
 
         taskServiceImpl.deleteTaskById(id);
 
+        Mockito.verify(taskRepository, Mockito.times(1)).existsById(id);
         Mockito.verify(taskRepository, Mockito.times(1)).deleteById(id);
-        Mockito.verify(taskRepository, Mockito.times(1)).findById(id);
     }
 
     @Test
     void deleteTask_whenTaskDoesNotExits_shouldDeleteTaskNotFoundException() {
         Long id = 99L;
-        Mockito.when(taskRepository.findById(id)).thenReturn(Optional.empty());
+        Mockito.when(taskRepository.existsById(id)).thenReturn(false);
 
         TaskNotFoundException exception = assertThrows(
                 TaskNotFoundException.class,
                 () -> taskServiceImpl.deleteTaskById(id));
 
         assertEquals("Task with id " + id + " not found", exception.getMessage());
-        Mockito.verify(taskRepository, Mockito.times(1)).findById(id);
+        Mockito.verify(taskRepository, Mockito.times(1)).existsById(id);
     }
 }

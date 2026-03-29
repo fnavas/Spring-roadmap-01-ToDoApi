@@ -33,7 +33,6 @@ public class TaskRestController implements ApiTaskController {
     public ResponseEntity<Page<TaskDto>> getAllTasks(
             @ParameterObject TaskFilter taskFilter
     ) {
-        log.info("[getAllTasks]-Getting all tasks");
         Page<TaskDto> taskDtos = taskService.findAll(taskFilter);
         return ResponseEntity.ok(taskDtos);
     }
@@ -41,8 +40,7 @@ public class TaskRestController implements ApiTaskController {
     @Override
     @GetMapping("/tasks/{id}")
     public ResponseEntity<TaskDto> getTaskById(@PathVariable @Positive Long id) {
-        log.info("[getTaskById]-Getting task by id");
-        log.debug("[getTaskById]-Getting task by id {}", id);
+        log.debug("[getTaskById] id={}", id);
         TaskDto taskDto = taskService.findById(id);
         return ResponseEntity.ok(taskDto);
     }
@@ -50,8 +48,7 @@ public class TaskRestController implements ApiTaskController {
     @Override
     @PostMapping("/tasks")
     public ResponseEntity<TaskDto> createTask(@Valid @RequestBody TaskDto taskDto) {
-        log.info("[createTask]-Creating task");
-        log.debug("[createTask]-Creating task {}", taskDto);
+        log.debug("[createTask] {}", taskDto);
         TaskDto createdTask = taskService.createTask(taskDto);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -64,8 +61,7 @@ public class TaskRestController implements ApiTaskController {
     @Override
     @PutMapping("/tasks/{id}")
     public ResponseEntity<TaskDto> updateTask(@PathVariable @Positive Long id, @Valid @RequestBody TaskDto taskDto) {
-        log.info("[updateTask]-Updating task");
-        log.debug("[updateTask]-Updating task {}", taskDto);
+        log.debug("[updateTask] id={}, body={}", id, taskDto);
         TaskDto updatedTaskDto = taskService.updateTaskById(id, taskDto);
         return ResponseEntity.ok(updatedTaskDto);
     }
@@ -73,8 +69,7 @@ public class TaskRestController implements ApiTaskController {
     @Override
     @DeleteMapping("/tasks/{id}")
     public ResponseEntity<Void> deleteTask(@PathVariable @Positive Long id) {
-        log.info("[deleteTask]-Deleting task by id");
-        log.debug("[deleteTask]-Deleting task by id {}", id);
+        log.debug("[deleteTask] id={}", id);
         taskService.deleteTaskById(id);
         return ResponseEntity.noContent().build();
     }

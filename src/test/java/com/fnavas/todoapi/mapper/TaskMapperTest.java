@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -68,7 +68,7 @@ class TaskMapperTest {
 
     @Test
     void toEntity_mapsAllFields() {
-        TaskDto dto = new TaskDto(10L, "Write tests", "Cover mapper layer", true, null, null, LocalDate.now());
+        TaskDto dto = new TaskDto(10L, "Write tests", "Cover mapper layer", true, null, null, LocalDateTime.now());
 
         Task task = taskMapper.toEntity(dto);
 

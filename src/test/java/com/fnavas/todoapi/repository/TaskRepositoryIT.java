@@ -9,7 +9,7 @@ import org.springframework.boot.jpa.test.autoconfigure.TestEntityManager;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.jpa.domain.Specification;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -104,7 +104,7 @@ class TaskRepositoryIT {
     @Test
     void updateTask_withCreatedDate_shouldNotChange() {
         Task task = taskRepository.findAll().get(0);
-        LocalDate originalDate = task.getCreated();
+        LocalDateTime originalDate = task.getCreated();
         Long id = task.getId();
         task.setCreated(originalDate.plusDays(1));
         taskRepository.saveAndFlush(task);

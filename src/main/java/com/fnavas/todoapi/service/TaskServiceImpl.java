@@ -14,11 +14,18 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Set;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class TaskServiceImpl implements TaskService {
+
+    private static final Set<String> SORTABLE_FIELDS = Set.of(
+            "id", "title", "created", "completed", "priority", "dueDate");
 
     private final TaskRepository taskRepository;
     private final TaskMapper taskMapper;
@@ -34,7 +41,11 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public Page<TaskDto> findAll(TaskFilter filter) {
         log.info("[findAll] page={}, size={}, sortBy={}, sortDir={}", filter.getPage(), filter.getSize(), filter.getSortBy(), filter.getSortDir());
-        Specification<Task> spec = Specification.where((root, query, cb) -> cb.conjunction());
+        if (!SORTABLE_FIELDS.contains(filter.getSortBy())) {
+            throw new IllegalArgumentException("Invalid sortBy field: " + filter.getSortBy()
+                    + ". Allowed values: " + SORTABLE_FIELDS);
+        }
+        Specification<Task> spec = (root, query, cb) -> cb.conjunction();
         if (filter.getTitle() != null && !filter.getTitle().isBlank()) {
             log.info("[findAll] filter title={}", filter.getTitle());
             spec = spec.and((root, query, criteriaBuilder) ->
@@ -68,6 +79,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    @Transactional
     public TaskDto createTask(TaskDto taskDto) {
         log.info("[createTask] title={}", taskDto.title());
         Task task = taskMapper.toEntity(taskDto);
@@ -75,23 +87,26 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    @Transactional
     public TaskDto updateTaskById(Long id, TaskDto taskDto) {
         log.info("[updateTaskById] id={}", id);
         Task task = taskRepository.findById(id).orElseThrow(
                 () -> new TaskNotFoundException("Task with id " + id + " not found"));
-        task.setTitle(taskDto.title());
-        task.setDescription(taskDto.description());
-        task.setCompleted(taskDto.completed() != null ? taskDto.completed() : task.getCompleted());
-        task.setPriority(taskDto.priority() != null ? taskDto.priority() : task.getPriority());
-        task.setDueDate(taskDto.dueDate());
+        if (taskDto.title() != null) task.setTitle(taskDto.title());
+        if (taskDto.description() != null) task.setDescription(taskDto.description());
+        if (taskDto.completed() != null) task.setCompleted(taskDto.completed());
+        if (taskDto.priority() != null) task.setPriority(taskDto.priority());
+        if (taskDto.dueDate() != null) task.setDueDate(taskDto.dueDate());
         return taskMapper.toDto(taskRepository.save(task));
     }
 
     @Override
+    @Transactional
     public void deleteTaskById(Long id) {
         log.info("[deleteTaskById] id={}", id);
-        taskRepository.findById(id).orElseThrow(
-                () -> new TaskNotFoundException("Task with id " + id + " not found"));
+        if (!taskRepository.existsById(id)) {
+            throw new TaskNotFoundException("Task with id " + id + " not found");
+        }
         taskRepository.deleteById(id);
     }
 }

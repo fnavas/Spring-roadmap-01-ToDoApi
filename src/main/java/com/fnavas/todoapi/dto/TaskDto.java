@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public record TaskDto (
         Long id,
@@ -17,5 +18,5 @@ public record TaskDto (
         Priority priority,
         @FutureOrPresent(message = "Due date must be today or in the future")
         LocalDate dueDate,
-        LocalDate created
+        LocalDateTime created
 ){ }

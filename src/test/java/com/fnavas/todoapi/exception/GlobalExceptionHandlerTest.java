@@ -27,6 +27,19 @@ class GlobalExceptionHandlerTest {
     private TaskService taskService;
 
     @Test
+    void illegalArgumentHandleException_shouldReturnBadRequest() throws Exception {
+        Mockito.when(taskService.findAll(any(TaskFilter.class)))
+                .thenThrow(new IllegalArgumentException("Invalid sortBy field: foo"));
+
+        mockMvc.perform(get("/api/v1/tasks")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.statusCode").value(400))
+                .andExpect(jsonPath("$.message").value("Invalid argument"))
+                .andExpect(jsonPath("$.error").value("Invalid sortBy field: foo"));
+    }
+
+    @Test
     void exceptionHandleException_shouldHandleException() throws Exception {
         Mockito.when(taskService.findAll(any(TaskFilter.class))).thenThrow(new RuntimeException("Database error"));
 
