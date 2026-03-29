@@ -30,6 +30,28 @@
                   "    pm.expect(json.content).to.be.an('array');",
                   "    pm.expect(json.totalElements).to.be.above(0);",
                   "    pm.expect(json.totalPages).to.be.above(0);",
+                  "});",
+                  "",
+                  "// ── Contract: Page schema ──",
+                  "pm.test('Contract: Page has all pagination fields', () => {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json).to.have.property('content').that.is.an('array');",
+                  "    pm.expect(json).to.have.property('totalElements').that.is.a('number');",
+                  "    pm.expect(json).to.have.property('totalPages').that.is.a('number');",
+                  "    pm.expect(json).to.have.property('number').that.is.a('number');",
+                  "    pm.expect(json).to.have.property('size').that.is.a('number');",
+                  "    pm.expect(json).to.have.property('first').that.is.a('boolean');",
+                  "    pm.expect(json).to.have.property('last').that.is.a('boolean');",
+                  "});",
+                  "",
+                  "pm.test('Contract: TaskDto inside content has correct schema', () => {",
+                  "    const task = pm.response.json().content[0];",
+                  "    pm.expect(task).to.have.property('id').that.is.a('number');",
+                  "    pm.expect(task).to.have.property('title').that.is.a('string');",
+                  "    pm.expect(task).to.have.property('completed').that.is.a('boolean');",
+                  "    pm.expect(task).to.have.property('priority').that.is.a('string');",
+                  "    pm.expect(task).to.have.property('created').that.is.a('string');",
+                  "    // nullable fields: description, dueDate — may or may not be present",
                   "});"
                 ]
               }
@@ -165,6 +187,38 @@
                 { "key": "sortBy", "value": "title" },
                 { "key": "sortDir", "value": "desc" },
                 { "key": "size", "value": "10" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET all tasks (invalid sortBy - 400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 400', () => pm.response.to.have.status(400));",
+                  "pm.test('Contract: ErrorResponse schema', () => {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json).to.have.property('statusCode', 400);",
+                  "    pm.expect(json).to.have.property('message').that.is.a('string');",
+                  "    pm.expect(json).to.have.property('error').that.is.a('string');",
+                  "    pm.expect(json).to.have.property('timestamp').that.is.a('string');",
+                  "    pm.expect(json.error).to.include('sortBy');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/tasks?sortBy=nonExistent",
+              "host": ["{{baseUrl}}"],
+              "path": ["tasks"],
+              "query": [
+                { "key": "sortBy", "value": "nonExistent" }
               ]
             }
           }
@@ -324,88 +378,6 @@
           }
         },
         {
-          "name": "GET task by ID (existing)",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
-                  "pm.test('Task has expected fields', () => {",
-                  "    const json = pm.response.json();",
-                  "    pm.expect(json).to.have.property('id');",
-                  "    pm.expect(json).to.have.property('title');",
-                  "    pm.expect(json).to.have.property('description');",
-                  "    pm.expect(json).to.have.property('completed');",
-                  "    pm.expect(json).to.have.property('priority');",
-                  "    pm.expect(json).to.have.property('created');",
-                  "});"
-                ]
-              }
-            }
-          ],
-          "request": {
-            "method": "GET",
-            "url": {
-              "raw": "{{baseUrl}}/tasks/{{taskId}}",
-              "host": ["{{baseUrl}}"],
-              "path": ["tasks", "{{taskId}}"]
-            }
-          }
-        },
-        {
-          "name": "GET task by ID (not found - 404)",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "pm.test('Status 404', () => pm.response.to.have.status(404));",
-                  "pm.test('Error body has message', () => {",
-                  "    const json = pm.response.json();",
-                  "    pm.expect(json).to.have.property('message');",
-                  "    pm.expect(json).to.have.property('statusCode');",
-                  "    pm.expect(json.statusCode).to.equal(404);",
-                  "});"
-                ]
-              }
-            }
-          ],
-          "request": {
-            "method": "GET",
-            "url": {
-              "raw": "{{baseUrl}}/tasks/999",
-              "host": ["{{baseUrl}}"],
-              "path": ["tasks", "999"]
-            }
-          }
-        },
-        {
-          "name": "GET task by ID (invalid id - 400)",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "pm.test('Status 400', () => pm.response.to.have.status(400));",
-                  "pm.test('Validation error returned', () => {",
-                  "    const json = pm.response.json();",
-                  "    pm.expect(json.statusCode).to.equal(400);",
-                  "});"
-                ]
-              }
-            }
-          ],
-          "request": {
-            "method": "GET",
-            "url": {
-              "raw": "{{baseUrl}}/tasks/0",
-              "host": ["{{baseUrl}}"],
-              "path": ["tasks", "0"]
-            }
-          }
-        },
-        {
           "name": "POST create task (valid)",
           "event": [
             {
@@ -424,6 +396,17 @@
                   "    pm.expect(json.completed).to.be.false;",
                   "    pm.expect(json.priority).to.equal('MEDIUM');",
                   "});",
+                  "",
+                  "// ── Contract: TaskDto schema on create ──",
+                  "pm.test('Contract: created task has all required fields', () => {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json.id).to.be.a('number');",
+                  "    pm.expect(json.title).to.be.a('string');",
+                  "    pm.expect(json.completed).to.be.a('boolean');",
+                  "    pm.expect(json.priority).to.be.oneOf(['LOW', 'MEDIUM', 'HIGH']);",
+                  "    pm.expect(json.created).to.be.a('string');",
+                  "});",
+                  "",
                   "const id = pm.response.json().id;",
                   "pm.collectionVariables.set('taskId', id);",
                   "console.log('Saved taskId:', id);"
@@ -492,6 +475,15 @@
                   "    const json = pm.response.json();",
                   "    pm.expect(json.statusCode).to.equal(400);",
                   "    pm.expect(json.message).to.include('Validation');",
+                  "});",
+                  "",
+                  "// ── Contract: ErrorResponse schema ──",
+                  "pm.test('Contract: ErrorResponse field types', () => {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json.statusCode).to.be.a('number');",
+                  "    pm.expect(json.message).to.be.a('string');",
+                  "    pm.expect(json.error).to.be.a('string');",
+                  "    pm.expect(json.timestamp).to.be.a('string');",
                   "});"
                 ]
               }
@@ -510,6 +502,140 @@
               "raw": "{{baseUrl}}/tasks",
               "host": ["{{baseUrl}}"],
               "path": ["tasks"]
+            }
+          }
+        },
+        {
+          "name": "POST create task (past dueDate - 400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 400', () => pm.response.to.have.status(400));",
+                  "pm.test('Validation error for past dueDate', () => {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json.statusCode).to.equal(400);",
+                  "    pm.expect(json.error.toLowerCase()).to.include('due');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Overdue task\",\n  \"dueDate\": \"2020-01-01\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/tasks",
+              "host": ["{{baseUrl}}"],
+              "path": ["tasks"]
+            }
+          }
+        },
+        {
+          "name": "GET task by ID (existing)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Task has expected fields', () => {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json).to.have.property('id');",
+                  "    pm.expect(json).to.have.property('title');",
+                  "    pm.expect(json).to.have.property('description');",
+                  "    pm.expect(json).to.have.property('completed');",
+                  "    pm.expect(json).to.have.property('priority');",
+                  "    pm.expect(json).to.have.property('created');",
+                  "});",
+                  "",
+                  "// ── Contract: TaskDto schema ──",
+                  "pm.test('Contract: TaskDto field types', () => {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json.id).to.be.a('number');",
+                  "    pm.expect(json.title).to.be.a('string');",
+                  "    pm.expect(json.completed).to.be.a('boolean');",
+                  "    pm.expect(json.priority).to.be.oneOf(['LOW', 'MEDIUM', 'HIGH']);",
+                  "    pm.expect(json.created).to.be.a('string');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/tasks/{{taskId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["tasks", "{{taskId}}"]
+            }
+          }
+        },
+        {
+          "name": "GET task by ID (not found - 404)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 404', () => pm.response.to.have.status(404));",
+                  "pm.test('Error body has message', () => {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json).to.have.property('message');",
+                  "    pm.expect(json).to.have.property('statusCode');",
+                  "    pm.expect(json.statusCode).to.equal(404);",
+                  "});",
+                  "",
+                  "// ── Contract: ErrorResponse schema ──",
+                  "pm.test('Contract: ErrorResponse field types', () => {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json.statusCode).to.be.a('number');",
+                  "    pm.expect(json.message).to.be.a('string');",
+                  "    pm.expect(json.error).to.be.a('string');",
+                  "    pm.expect(json.timestamp).to.be.a('string');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/tasks/999",
+              "host": ["{{baseUrl}}"],
+              "path": ["tasks", "999"]
+            }
+          }
+        },
+        {
+          "name": "GET task by ID (invalid id - 400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 400', () => pm.response.to.have.status(400));",
+                  "pm.test('Validation error returned', () => {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json.statusCode).to.equal(400);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/tasks/0",
+              "host": ["{{baseUrl}}"],
+              "path": ["tasks", "0"]
             }
           }
         },
@@ -612,6 +738,38 @@
           }
         },
         {
+          "name": "PUT update task (invalid id - 400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 400', () => pm.response.to.have.status(400));",
+                  "pm.test('Validation error for invalid id', () => {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json.statusCode).to.equal(400);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Valid title\",\n  \"completed\": false\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/tasks/0",
+              "host": ["{{baseUrl}}"],
+              "path": ["tasks", "0"]
+            }
+          }
+        },
+        {
           "name": "DELETE task (existing)",
           "event": [
             {
@@ -657,6 +815,31 @@
               "raw": "{{baseUrl}}/tasks/999",
               "host": ["{{baseUrl}}"],
               "path": ["tasks", "999"]
+            }
+          }
+        },
+        {
+          "name": "DELETE task (invalid id - 400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 400', () => pm.response.to.have.status(400));",
+                  "pm.test('Validation error for invalid id', () => {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json.statusCode).to.equal(400);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/tasks/0",
+              "host": ["{{baseUrl}}"],
+              "path": ["tasks", "0"]
             }
           }
         }

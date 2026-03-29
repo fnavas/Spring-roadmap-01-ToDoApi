@@ -38,6 +38,119 @@ public class TaskRestControllerIT {
         taskRepository.deleteAll();
     }
 
+    // ── Contract: TaskDto schema ─────────────────────────────────────────────
+
+    @Test
+    void contract_taskDto_shouldContainAllFieldsWithCorrectTypes() throws Exception {
+        Task task = new Task();
+        task.setTitle("contract task");
+        task.setDescription("desc");
+        task.setPriority(Priority.HIGH);
+        task.setDueDate(LocalDate.now().plusDays(1));
+        taskRepository.save(task);
+
+        mockMvc.perform(get("/api/v1/tasks/{id}", task.getId()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").isNumber())
+                .andExpect(jsonPath("$.title").isString())
+                .andExpect(jsonPath("$.description").isString())
+                .andExpect(jsonPath("$.completed").isBoolean())
+                .andExpect(jsonPath("$.priority").isString())
+                .andExpect(jsonPath("$.dueDate").isString())
+                .andExpect(jsonPath("$.created").isString());
+    }
+
+    @Test
+    void contract_taskDto_nullableFieldsCanBeNull() throws Exception {
+        Task task = new Task();
+        task.setTitle("minimal task");
+        taskRepository.save(task);
+
+        mockMvc.perform(get("/api/v1/tasks/{id}", task.getId()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").isNumber())
+                .andExpect(jsonPath("$.title").isString())
+                .andExpect(jsonPath("$.description").doesNotExist())
+                .andExpect(jsonPath("$.completed").isBoolean())
+                .andExpect(jsonPath("$.priority").isString())
+                .andExpect(jsonPath("$.dueDate").doesNotExist())
+                .andExpect(jsonPath("$.created").isString());
+    }
+
+    // ── Contract: Page<TaskDto> schema ────────────────────────────────────────
+
+    @Test
+    void contract_page_shouldContainAllPaginationFields() throws Exception {
+        Task task = new Task();
+        task.setTitle("page contract");
+        taskRepository.save(task);
+
+        mockMvc.perform(get("/api/v1/tasks"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content").isArray())
+                .andExpect(jsonPath("$.totalElements").isNumber())
+                .andExpect(jsonPath("$.totalPages").isNumber())
+                .andExpect(jsonPath("$.number").isNumber())
+                .andExpect(jsonPath("$.size").isNumber())
+                .andExpect(jsonPath("$.first").isBoolean())
+                .andExpect(jsonPath("$.last").isBoolean());
+    }
+
+    @Test
+    void contract_page_taskInsideContentHasCorrectSchema() throws Exception {
+        Task task = new Task();
+        task.setTitle("nested contract");
+        task.setDescription("inside page");
+        task.setPriority(Priority.LOW);
+        taskRepository.save(task);
+
+        mockMvc.perform(get("/api/v1/tasks"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content[0].id").isNumber())
+                .andExpect(jsonPath("$.content[0].title").isString())
+                .andExpect(jsonPath("$.content[0].description").isString())
+                .andExpect(jsonPath("$.content[0].completed").isBoolean())
+                .andExpect(jsonPath("$.content[0].priority").isString())
+                .andExpect(jsonPath("$.content[0].created").isString());
+    }
+
+    // ── Contract: ErrorResponse schema ────────────────────────────────────────
+
+    @Test
+    void contract_errorResponse_notFound_shouldContainAllFields() throws Exception {
+        mockMvc.perform(get("/api/v1/tasks/{id}", 999L))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.statusCode").isNumber())
+                .andExpect(jsonPath("$.message").isString())
+                .andExpect(jsonPath("$.error").isString())
+                .andExpect(jsonPath("$.timestamp").isString());
+    }
+
+    @Test
+    void contract_errorResponse_badRequest_shouldContainAllFields() throws Exception {
+        TaskDto invalid = new TaskDto(null, null, "no title", null, null, null, null);
+
+        mockMvc.perform(post("/api/v1/tasks")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(invalid)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.statusCode").isNumber())
+                .andExpect(jsonPath("$.message").isString())
+                .andExpect(jsonPath("$.error").isString())
+                .andExpect(jsonPath("$.timestamp").isString());
+    }
+
+    @Test
+    void contract_errorResponse_invalidSortBy_shouldReturn400() throws Exception {
+        mockMvc.perform(get("/api/v1/tasks")
+                        .param("sortBy", "nonExistentField"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.statusCode").value(400))
+                .andExpect(jsonPath("$.message").isString())
+                .andExpect(jsonPath("$.error").isString())
+                .andExpect(jsonPath("$.timestamp").isString());
+    }
+
     // ── GET /tasks ─────────────────────────────────────────────────────────────
 
     @Test
